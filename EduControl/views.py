@@ -34,6 +34,6 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
 
-        return render(request, 'EduControl/register.html',
+        return render(request, 'EduControl/channel_register.html',
         {'user_form':user_form, 'profile_form':profile_form,
         'registered':registered})

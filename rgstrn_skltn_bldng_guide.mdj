@@ -535,11 +535,11 @@
 								"$ref": "AAAAAAFopgjdquzb3Mw="
 							},
 							"font": "Arial;13;0",
-							"left": 392,
-							"top": 888,
+							"left": 448,
+							"top": 880,
 							"width": 297,
-							"height": 445,
-							"text": "import render\nimport userForm, UserProfileInfoForm\n  \ndef register(request):\n    registered = False\n    user_form = UserForm()\n    if request.method == \"POST\":\n       user_form = UserForm(data=request.POST)\n       user_profile_form= \n          UserProfileInfoForm(data=request.POST)\n       \n         if form.is_valid() and \n            user_profile_form.is_valid():\n \n            user = user_form.save()\n            user.set_password(user.password)\n            user.save()\n\n            profile = profile_form.save(commit=False)\n            profile.user = user\n            profile.save()\n\n            return index(request)\n//or return successful registration page\n         else:\n            return error\n     //in Templates\n     return render(request, 'appName/users.html', \n      {'form': form}) re"
+							"height": 561,
+							"text": "import render\nimport userForm, UserProfileInfoForm\n  \ndef register(request):\n    registered = False\n    user_form = UserForm()\n    if request.method == \"POST\":\n       user_form = UserForm(data=request.POST)\n       user_profile_form= \n          UserProfileInfoForm(data=request.POST)\n       \n         if user_form.is_valid() and \n            user_profile_form.is_valid():\n \n            user = user_form.save()\n            user.set_password(user.password)\n            user.save()\n\n            profile = profile_form.save(commit=False)\n            profile.user = user\n            profile.save()\n\n            registered = True\n            return index(request)\n//or return successful registration page\n         else:\n            print(user_form.errors, \n                 profile_form.errors)\n    \n    else:\n       user_form = UserForm()\n       profile_form = UserProfileInfoForm()\n       return render(request, 'appName/users.html', \n        {'user_form': user_form, \n        'profile_form':profile_form, 'registered':registered}) "
 						},
 						{
 							"_type": "UMLObjectView",
@@ -569,8 +569,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -32,
-											"top": 1024,
+											"left": -16,
+											"top": 1488,
 											"height": 13
 										},
 										{
@@ -580,8 +580,8 @@
 												"$ref": "AAAAAAFopjOXUO2x/SM="
 											},
 											"font": "Arial;13;1",
-											"left": 277,
-											"top": 1303,
+											"left": 285,
+											"top": 1535,
 											"width": 78.025390625,
 											"height": 13,
 											"underline": true,
@@ -595,8 +595,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -32,
-											"top": 1024,
+											"left": -16,
+											"top": 1488,
 											"width": 73.67724609375,
 											"height": 13,
 											"text": "(from Model)"
@@ -609,15 +609,15 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -32,
-											"top": 1024,
+											"left": -16,
+											"top": 1488,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 272,
-									"top": 1296,
+									"left": 280,
+									"top": 1528,
 									"width": 88.025390625,
 									"height": 25,
 									"stereotypeLabel": {
@@ -644,16 +644,16 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": -16,
-									"top": 512,
+									"left": -8,
+									"top": 744,
 									"width": 10,
 									"height": 10
 								}
 							],
 							"font": "Arial;13;0",
 							"containerChangeable": true,
-							"left": 272,
-							"top": 1296,
+							"left": 280,
+							"top": 1528,
 							"width": 88.025390625,
 							"height": 25,
 							"nameCompartment": {
@@ -670,8 +670,8 @@
 								"$ref": "AAAAAAFopgjdquzb3Mw="
 							},
 							"font": "Arial;13;0",
-							"left": 40,
-							"top": 1240,
+							"left": 48,
+							"top": 1496,
 							"width": 225,
 							"height": 113,
 							"text": "14. Create the html page \n\n15. Create <form> with method=\"POST\"\n\n16. Tag the template:  {{ form.as_p}}\n17. Add security tag: {% csrf_token%}"
@@ -683,8 +683,8 @@
 								"$ref": "AAAAAAFopgjdquzb3Mw="
 							},
 							"font": "Arial;13;0",
-							"left": 392,
-							"top": 1288,
+							"left": 416,
+							"top": 1544,
 							"width": 1344.18212890625,
 							"height": 57,
 							"text": "https://www.udemy.com/python-and-django-full-stack-web-developer-bootcamp/learn/v4/t/lecture/6637844?start=302"
@@ -1091,8 +1091,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -80,
-											"top": 496,
+											"left": -64,
+											"top": 912,
 											"height": 13
 										},
 										{
@@ -1102,8 +1102,8 @@
 												"$ref": "AAAAAAFop//HAu7zFPY="
 											},
 											"font": "Arial;13;1",
-											"left": 277,
-											"top": 1447,
+											"left": 285,
+											"top": 1655,
 											"width": 79.8544921875,
 											"height": 13,
 											"underline": true,
@@ -1117,8 +1117,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -80,
-											"top": 496,
+											"left": -64,
+											"top": 912,
 											"width": 73.67724609375,
 											"height": 13,
 											"text": "(from Model)"
@@ -1131,15 +1131,15 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -80,
-											"top": 496,
+											"left": -64,
+											"top": 912,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 272,
-									"top": 1440,
+									"left": 280,
+									"top": 1648,
 									"width": 89.8544921875,
 									"height": 25,
 									"stereotypeLabel": {
@@ -1166,16 +1166,16 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": -40,
-									"top": 248,
+									"left": -32,
+									"top": 456,
 									"width": 10,
 									"height": 10
 								}
 							],
 							"font": "Arial;13;0",
 							"containerChangeable": true,
-							"left": 272,
-							"top": 1440,
+							"left": 280,
+							"top": 1648,
 							"width": 89.8544921875,
 							"height": 25,
 							"nameCompartment": {
@@ -1192,8 +1192,8 @@
 								"$ref": "AAAAAAFopgjdquzb3Mw="
 							},
 							"font": "Arial;13;0",
-							"left": 48,
-							"top": 1424,
+							"left": 56,
+							"top": 1632,
 							"width": 217,
 							"height": 61,
 							"text": "18. build the base.html to inherit from"
@@ -1205,8 +1205,8 @@
 								"$ref": "AAAAAAFopgjdquzb3Mw="
 							},
 							"font": "Arial;13;0",
-							"left": 392,
-							"top": 1432,
+							"left": 400,
+							"top": 1640,
 							"width": 666.24609375,
 							"height": 25,
 							"text": "https://www.udemy.com/python-and-django-full-stack-web-developer-bootcamp/learn/v4/t/lecture/6660250?start=0"
