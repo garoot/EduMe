@@ -538,8 +538,8 @@
 							"left": 392,
 							"top": 888,
 							"width": 297,
-							"height": 280,
-							"text": "import render\nimport userForm, UserProfileInfoForm\n  \ndef register(request):\n    registered = False\n    user_form = UserForm()\n    if request.method == \"POST\":\n       form = UserForm(request.POST)\n       \n         if form.is_valid():\n            form.save(commit=True)\n            return index(request)\n//or       return successful registration page\n         else:\n            return error\n     //in Templates\n     return render(request, 'appName/users.html', \n      {'form': form}) re"
+							"height": 445,
+							"text": "import render\nimport userForm, UserProfileInfoForm\n  \ndef register(request):\n    registered = False\n    user_form = UserForm()\n    if request.method == \"POST\":\n       user_form = UserForm(data=request.POST)\n       user_profile_form= \n          UserProfileInfoForm(data=request.POST)\n       \n         if form.is_valid() and \n            user_profile_form.is_valid():\n \n            user = user_form.save()\n            user.set_password(user.password)\n            user.save()\n\n            profile = profile_form.save(commit=False)\n            profile.user = user\n            profile.save()\n\n            return index(request)\n//or return successful registration page\n         else:\n            return error\n     //in Templates\n     return render(request, 'appName/users.html', \n      {'form': form}) re"
 						},
 						{
 							"_type": "UMLObjectView",
@@ -1228,7 +1228,8 @@
 							"_parent": {
 								"$ref": "AAAAAAFopgkSquzeMFs="
 							},
-							"name": "userName"
+							"name": "userName",
+							"type": ""
 						},
 						{
 							"_type": "UMLSlot",
@@ -1236,7 +1237,8 @@
 							"_parent": {
 								"$ref": "AAAAAAFopgkSquzeMFs="
 							},
-							"name": "email"
+							"name": "email",
+							"type": ""
 						},
 						{
 							"_type": "UMLSlot",
@@ -1244,7 +1246,8 @@
 							"_parent": {
 								"$ref": "AAAAAAFopgkSquzeMFs="
 							},
-							"name": "password"
+							"name": "password",
+							"type": ""
 						}
 					]
 				},

@@ -9,17 +9,31 @@ def index(request):
     return render(request, 'EduMe/index.html')
 
 def register(request):
+
     registered = False
+
     user_form = UserForm()
     if request.method == "POST":
-        form = UserForm(request.POST)
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileInfoForm(data=request.POST)
 
-        if form.is_valid():
-            form.save(commit=True)
-            return index(request)
-            #or you can return a "Successful Registration" page
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit=True)
+            profile.user = user
+            profile.save()
 
         else:
-            print("There was an error with one one of the fields")
+            print(user_form.errors, profile_form.errors)
 
-    return render(request, 'EduControl/register.html', {'form':form})
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileInfoForm()
+
+        return render(request, 'EduControl/register.html',
+        {'user_form':user_form, 'profile_form':profile_form,
+        'registered':registered})
