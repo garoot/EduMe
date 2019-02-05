@@ -1,0 +1,21 @@
+{% extends "EduMe/base.html" %}
+{% block title %} Channel Registration Page {% endblock %}
+
+{% block body_block %}
+<div class="jumbotron">
+  <h1>this is the registration page for channels</h1>
+
+{% if registered %}
+  <h1>Thank you for registering!</h1>
+{% else %}
+  <h1>Please fill out the form:</h1>
+
+  <form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    <input type="submit" name="" value="Register">
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
