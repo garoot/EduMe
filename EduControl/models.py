@@ -6,10 +6,10 @@ class UserProfileInfo(models.Model):
     # includes: username, email, password
     GENDER_CHOICES= (
         ('M', 'Male'),
-        ('F'. 'Female')
+        ('F', 'Female')
     )
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     FirstName = models.CharField(max_length=255)
     LastName = models.CharField(max_length=255)
