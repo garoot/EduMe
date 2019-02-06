@@ -9,13 +9,11 @@ class UserProfileInfo(models.Model):
         ('F', 'Female')
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
-    FirstName = models.CharField(max_length=255)
-    LastName = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     country = models.CharField(max_length=36)
     city = models.CharField(max_length=36)
 
     def __str__(self):
-        return self.user.username
+        return username
