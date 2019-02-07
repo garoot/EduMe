@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from EduControl.forms import UserForm, UserProfileInfoForm
-
+from django.http import HttpResponse
 # Create your views here.
 def broadcast_station(request):
     return render(request, 'EduControl/broadcast_station.html')
@@ -19,6 +19,7 @@ def register(request):
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
+            return render(request, 'EduMe/index.html')
 
             user.set_password(user.password)
             user.save()

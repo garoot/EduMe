@@ -12,5 +12,4 @@ class UserForm(forms.ModelForm):
 class UserProfileInfoForm(forms.ModelForm):
     class Meta():
         model = UserProfileInfo
-        # exclude = ('user',)
-        exclude = ('username',)
+        fields = ('gender', 'country', 'city',)

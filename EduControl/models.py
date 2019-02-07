@@ -16,4 +16,4 @@ class UserProfileInfo(models.Model):
     city = models.CharField(max_length=36)
 
     def __str__(self):
-        return username
+        return self.user.username

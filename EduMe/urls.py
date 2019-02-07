@@ -21,6 +21,6 @@ from EduControl import views, urls as EduControl_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
-    url(r'^Educontrol/', include(EduControl_urls),),
+    url(r'^Educontrol/', include(EduControl_urls), name='EduControl_'),
 
 ]
