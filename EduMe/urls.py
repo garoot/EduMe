@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
-from EduControl import views, urls as EduControl_urls
+from InstructorAuthentication import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$', views.index, name='index'),
-    url(r'^Educontrol/', include(EduControl_urls), name='EduControl_'),
+    #url(r'^$', views.index, name='index'),
+    path('', include('InstructorAuthentication.urls'))
 
 ]
