@@ -1,16 +1,17 @@
 from django.db import models
 from phone_field import PhoneField
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django import forms
 
 # Create your models here.
-class Instructor(AbstractBaseUser):
-    FirstName = models.CharField(max_length=255)
+class Instructor(models.Model):
+    FirstName = models.CharField(max_length=255, )
     LastName = models.CharField(max_length=255)
-    InstructorEmail = models.EmailField(max_length=255, unique=True)
-    BirthDate = models.DateField()
+    EmailAddress = models.EmailField(max_length=255, unique=True)
+    password = models.CharField(max_length=32)
+    BirthDate = models.DateField(max_length=12, blank=True)
     PhoneNumber = PhoneField()
     Country = models.CharField(max_length=255)
     City = models.CharField(max_length=255)
@@ -20,10 +21,10 @@ class Instructor(AbstractBaseUser):
     InstructorStatus = models.BooleanField('instructor status', default=False)
 
 
-    USERNAME_FIELD = 'InstructorEmail'
+    USERNAME_FIELD = 'EmailAddress'
 
     def __str__(self):
-        return self.InstructorEmail
+        return self.EmailAddress
 
     def create_instructor_courses_list():
         InstructorCourses = InstructorCourses.objects.create(self.id)
@@ -38,4 +39,4 @@ def is_instructor_created(sender, instance, created, **kwargs):
         instance.InstructorCourses.save()
 #######################################################################
 class InstructorCourses(models.Model):
-    instructor_id = models.OneToOneField(Instructor, on_delete=models.CASCADE, related_name= 'CoursesList')
+    instructor_id = models.OneToOneField(Instructor, on_delete=models.CASCADE, default=1, related_name= 'CoursesList')

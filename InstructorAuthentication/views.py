@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.contrib import messages
 from InstructorAuthentication.forms import NewInstructorForm
 from InstructorAuthentication.models import Instructor, InstructorCourses
 
@@ -12,16 +14,21 @@ def instructor_registration(request):
 
     form = NewInstructorForm()
 
-    if request.method == "POST":
+    if 'EmailAddress' in request.POST:
+        print("Hello World")
         form = NewInstructorForm(request.POST)
 
         if form.is_valid():
-            form.save(commit=TRUE)
+            print("here")
+            form.save()
+            return HttpResponse('InstructorAuthentication/InstructorRegistration.html',{'form':form})
 
-            return render(request, 'EduMe/index.html',
-                            {})
+
+            # return render(request, 'EduMe/index.html',
+            #                  {'form': form})
         else:
-            print("Error!")
+            # messages.error(request, "Error")
+            return HttpResponse('EduMe/index.html',{'form':form})
 
     else:
         return render(request, 'InstructorAuthentication/InstructorRegistration.html',
