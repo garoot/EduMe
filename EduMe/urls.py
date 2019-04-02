@@ -20,7 +20,7 @@ from InstructorAuthentication import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #url(r'^$', views.index, name='index'),
-    path('', include('InstructorAuthentication.urls'))
+    url(r'^$', views.index, name='index'),
+    path('InstructorPage/', include('InstructorAuthentication.urls'))
 
 ]

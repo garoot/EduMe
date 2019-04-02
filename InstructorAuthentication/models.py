@@ -26,17 +26,22 @@ class Instructor(models.Model):
     def __str__(self):
         return self.EmailAddress
 
-    def create_instructor_courses_list():
-        InstructorCourses = InstructorCourses.objects.create(self.id)
+@receiver(post_save, sender=Instructor)
+def create_instructor_courses_list(sender, instance, created, **kwargs):
+    if created:
+        print("mistake here")
+        InstructorCourses.objects.create(instructor_id = instance)
+    else:
+        print("saving........")
 
 #the signal function below to be removed to a seperate signals.py file later
 #the function below is triggered when an instance of Instructor model is created
-@receiver(post_save, sender=Instructor)
-def is_instructor_created(sender, instance, created, **kwargs):
-    if created:
-        InstructorCourses.objects.create(instructor_id = instance)
-    else:
-        instance.InstructorCourses.save()
+# @receiver(post_save, sender=Instructor)
+# def is_instructor_created(sender, instance, created, **kwargs):
+#     if created:
+#         InstructorCourses.objects.create(instructor_id = instance)
+#     else:
+#         instance.InstructorCourses.save()
 #######################################################################
 class InstructorCourses(models.Model):
-    instructor_id = models.OneToOneField(Instructor, on_delete=models.CASCADE, default=1, related_name= 'CoursesList')
+    instructor_id = models.OneToOneField(Instructor, primary_key=True, on_delete=models.CASCADE, default=1, related_name= 'CoursesList')
