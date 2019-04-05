@@ -18,8 +18,13 @@
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a href="{% url 'InstructorAuthentication:instructor_page' %}">
-          <button type="button" name="register_btn">Instructor</button>
+
+          <a href="{% url 'Authentication:login' %}">
+          <button type="button" name="register_btn">Login</button>
+          </a>
+
+          <a href="{% url 'Authentication:new_user' %}">
+          <button type="button" name="register_btn">Register</button>
           </a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
@@ -28,12 +33,12 @@
                     <button type="button" id="dropdownMenu1" data-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle">Login <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right mt-1">
                       <li class="p-3">
-                            <form class="form" role="form">
+                            <form method="POST" class="form" role="form">
                                 <div class="form-group">
-                                    <input id="emailInput" placeholder="Email" class="form-control form-control-sm" type="text" required="">
+                                    <input id="username" placeholder="Email" class="form-control form-control-sm" type="text" required="">
                                 </div>
                                 <div class="form-group">
-                                    <input id="passwordInput" placeholder="Password" class="form-control form-control-sm" type="text" required="">
+                                    <input id="password" placeholder="Password" class="form-control form-control-sm" type="text" required="">
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary btn-block">Login</button>
@@ -45,8 +50,10 @@
                         </li>
                     </ul>
                 </li>
+
             </ul>
           </div>
+
         </nav>
 
         <div class="container">

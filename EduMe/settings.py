@@ -23,6 +23,11 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%4jf)u%dd&6gz2wm-mts)-qy-8x1j9)9m3#w_46&eif@0w=ya&'
 
+
+
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,11 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'InstructorAuthentication',
+    'Authentication',
     'InstructorInfoUpdating',
     'CourseControlStation',
     'phone_field',
 ]
+
+AUTH_USER_MODEL = 'Authentication.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
