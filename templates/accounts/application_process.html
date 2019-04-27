@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %} Application Processing Page {% endblock %}
+
+{% block body_block %}
+<div class="jumbotron">
+  <h1>  </h1>
+
+  {% if user.is_superuser %}
+    <h2>Instructor Name: {{ application.profile.user.first_name }}</h2>
+    <h2>Degree: {{application.degree}}</h2>
+    <h2>Major: {{application.major}}</h2>
+    <h2>Relevant Experience:</h2>
+    <body>
+      {{application.experience}}
+    </body>
+  {% endif %}
+  <div >
+    <a href="{% url 'accounts:finish_application' approved=0 oid=application.id %}">Reject</a>
+    <a href="{% url 'accounts:finish_application' approved=1 oid=application.id %}">Approve</a>
+
+  </div>
+
+  {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% endif %}
+</div>
+{% endblock %}

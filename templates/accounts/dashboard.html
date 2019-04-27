@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Registration Page {% endblock %}
+
+{% block body_block %}
+<div class="jumbotron">
+  <h1>{{request.user.first_name}} Dashboard</h1>
+<div class="a">
+  <body>
+    {% if request.user.is_authenticated %}
+    <ul>
+      <li> <a href="{% url "accounts:edit_profile" %}">Profile Info</a> </li>
+      <li> <a href="{% url "accounts:instructor_application" %}">Become an Instructor</a> </li>
+    </ul>
+      {% if user.is_superuser %}
+      <h1>WOW! you're a uper user!?</h1>
+      <li> <a href="{% url "accounts:list_applications" %}">Review Applications</a> </li>
+
+      {% endif %}
+    {% endif %}
+  </body>
+
+</div>
+</div>
+{% endblock %}

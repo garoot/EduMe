@@ -16,13 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
-from Authentication import views
+from accounts import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    url(r'^$', views.index, name='index'),
-    path('Registration/', include('Authentication.urls')),
-    # path('studentsPage/', include('Authentication.urls')),
-
-
+    # path('admin/', admin.site.urls),
+    # url(r'^$', views.index, name='index'),
+    # path('Registration/', include('Authentication.urls')),
+    # # path('studentsPage/', include('Authentication.urls')),
+    url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^$', views.index, name = 'index'),
 ]
+
+"""
+this is only temporary for development and will be changed in production
+"""
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

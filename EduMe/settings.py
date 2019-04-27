@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,6 +28,7 @@ SECRET_KEY = '%4jf)u%dd&6gz2wm-mts)-qy-8x1j9)9m3#w_46&eif@0w=ya&'
 
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
+        'accounts.authentication.EmailAuth',
     )
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,13 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Authentication',
-    'InstructorInfoUpdating',
-    'CourseControlStation',
+    'accounts',
     'phone_field',
+    'courses',
 ]
 
-AUTH_USER_MODEL = 'Authentication.User'
+# AUTH_USER_MODEL = 'auth.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,5 +132,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOGIN_URL = 'InstructorAuthentication/instructor_login'
+MEDIA_URL = '/media/'
