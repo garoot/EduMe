@@ -12,7 +12,7 @@ EDUCATION_DEGREES =(
     ('D', 'Diploma'),
     ('B', 'Bachelor\'s Degree'),
     ('M', 'Master\'s Degree'),
-    ('PHD', 'PhD'),
+    ('PH', 'PhD'),
 )
 APPLICATION_STATUS=(
     ('None', 'None'),
@@ -165,7 +165,7 @@ class InstructorApplication(models.Model):
     degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, default='None')
     major = models.CharField(max_length=344)
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
-    status = models.CharField(max_length=2, choices=APPLICATION_STATUS, default='None')
+    status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
     first_name = models.CharField(max_length=255)

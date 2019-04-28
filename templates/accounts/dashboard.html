@@ -12,10 +12,15 @@
       <li> <a href="{% url "accounts:instructor_application" %}">Become an Instructor</a> </li>
     </ul>
       {% if user.is_superuser %}
-      <h1>WOW! you're a uper user!?</h1>
+      <h1>WOW! you're a super user!?</h1>
       <li> <a href="{% url "accounts:list_applications" %}">Review Applications</a> </li>
-
       {% endif %}
+
+      {% if user.profile.is_instructor %}
+      <h1>You're an Instructor???! WOW</h1>
+      <li> <a href="{% url "courses:create_courses" %}">Create a Course</a> </li>
+      {% endif %}
+
     {% endif %}
   </body>
 

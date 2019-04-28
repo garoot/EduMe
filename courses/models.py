@@ -4,6 +4,14 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from accounts.models import InstructorReport, InstructorCoursesList, Profile
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
+COURSE_LEVELS=(
+    ('0', 'Beginner'),
+    ('1', 'Intermediate'),
+    ('2', 'Advanced'),
+    )
 
 class Category(models.Model):
     category=models.CharField(max_length=255)
@@ -20,12 +28,13 @@ class Subcategory(models.Model):
 # Create your models here.
 class Course(models.Model):
     instructor_course_list = models.ForeignKey(InstructorCoursesList, on_delete=models.SET_NULL, related_name="courses", null=True)
-    course_name = models.CharField(max_length=255)
+    course_name = models.CharField(max_length=255, verbose_name='Name of the Course')
     course_topic = models.CharField(max_length=255)
     course_price = models.FloatField()
     course_title = models.CharField(max_length=255)
     course_outline = models.TextField()
     course_requirements = models.TextField()
+    course_level = models.CharField(max_length=3, choices=COURSE_LEVELS)
     course_outcomes = models.TextField()
     course_description = models.TextField()
     target_students = models.TextField()
@@ -34,14 +43,25 @@ class Course(models.Model):
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_rating = models.FloatField()
+    #course_length is automatically calculated when the course is created
+    course_length = models.FloatField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
 
 class CourseSection(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
     section_num = models.IntegerField()
     section_name = models.CharField(max_length = 255, blank=True)
+class Content(models.Model):
+    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
+    content_type = models.ForeignKey(ContentType, limit_choices_to={'model__in':('File', 'Video', 'Image')})
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
 
-class ContentBase(models.Model):
-    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="item")
+
+class ItemBase(models.Model):
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name="items")
     title = models.CharField(max_length=455)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -52,18 +72,18 @@ class ContentBase(models.Model):
     def __str__(self):
         return self.title
 
-class File(ContentBase):
+class File(ItemBase):
     """
     before this line, we must identify the course category because..
     ..files will be saved into different folders based on that
     """
     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to="")
-class Video(ContentBase):
+class Video(ItemBase):
     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="videos")
     file = models.FileField(upload_to="")
 
-class Image(ContentBase):
+class Image(ItemBase):
     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="images")
     file = models.FileField(upload_to="")
 
