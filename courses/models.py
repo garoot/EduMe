@@ -44,7 +44,7 @@ class Course(models.Model):
     course_picture = models.ImageField(upload_to='courses/%Y/%m/%d', null=True)
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
-    course_rating = models.FloatField()
+    course_rating = models.FloatField(null=True)
     #course_length is automatically calculated when the course is created
     course_length = models.FloatField(null=True)
     created = models.DateTimeField(default=timezone.now, editable=False)

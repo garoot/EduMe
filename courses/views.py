@@ -11,12 +11,15 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 # Create your views here.
-app_name = 'courses'
 
 @login_required
 def create_course(request):
-    profile = Profile(user=request.user)
-    course_list = InstructorCoursesList(profile=profile)
+    profile=request.user.profile
+    # profile = Profile(user=request.user)
+    course_list = InstructorCoursesList.objects.filter(profile=profile)[0]
+    # Must save it first before assign it
+    # course_list.save()
+
     course = Course(instructor_course_list=course_list)
 
     if request.method == 'POST':

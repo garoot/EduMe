@@ -8,9 +8,12 @@ class CategoryAdmin(admin.ModelAdmin):
 class SubcategoryAdmin(admin.ModelAdmin):
     pass
 
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ['course_name', 'course_description', 'created', 'course_picture']
+
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Subcategory, SubcategoryAdmin)
-admin.site.register(Course)
+admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseSection)
 admin.site.register(CourseReport)
 admin.site.register(Video)
