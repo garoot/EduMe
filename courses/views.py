@@ -26,5 +26,6 @@ def create_course(request):
         else:
             messages.error(request, 'error creating the course')
     else:
-        new_course_form = CourseInfoForm(instance=course)
+        print("here...")
+        new_course_form = CourseInfoForm()
     return render(request, 'courses/create_course.html', {'new_course_form':new_course_form})

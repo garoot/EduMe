@@ -4,18 +4,15 @@
 {% block body_block %}
 <div class="jumbotron">
   <h1>  </h1>
-{% if user.is_authenticated %}
-    {% if user.profile.is_instructor %}
-      <form method="POST">
-        {{new_course_form.as_p}}
-        {% csrf_token %}
 
-        <input type="submit" class="btn btn-primary" value="Submit">
-      </form>
-    {% endif %}
+    <form method="POST">
+      {{new_course_form.as_p}}
+      {% csrf_token %}
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+
     {% if request.GET.next %}
       <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}
-{% endif %}
 
 {% endblock %}
