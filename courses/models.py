@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from accounts.models import InstructorReport, InstructorCoursesList, Profile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils import timezone
+
 
 COURSE_LEVELS=(
     ('0', 'Beginner'),
@@ -34,36 +36,37 @@ class Course(models.Model):
     course_title = models.CharField(max_length=255)
     course_outline = models.TextField()
     course_requirements = models.TextField()
-    course_level = models.CharField(max_length=3, choices=COURSE_LEVELS)
+    course_level = models.CharField(max_length=3, choices=COURSE_LEVELS, default="None")
     course_outcomes = models.TextField()
     course_description = models.TextField()
     target_students = models.TextField()
     # should be uploaded to a folder related to images of course of the same category
-    course_picture = models.FileField(upload_to="")
+    course_picture = models.ImageField(upload_to='courses/%Y/%m/%d', null=True)
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_rating = models.FloatField()
     #course_length is automatically calculated when the course is created
-    course_length = models.FloatField()
-    created = models.DateTimeField(auto_now_add=True)
+    course_length = models.FloatField(null=True)
+    created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
-
 class CourseSection(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections", null=True)
     section_num = models.IntegerField()
     section_name = models.CharField(max_length = 255, blank=True)
+    created = models.DateTimeField(default=timezone.now, editable=False)
+    updated = models.DateTimeField(auto_now=True)
+
 class Content(models.Model):
     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
-    content_type = models.ForeignKey(ContentType, limit_choices_to={'model__in':('File', 'Video', 'Image')})
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE , limit_choices_to={'model__in':('File', 'Video', 'Image')})
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
 
-
 class ItemBase(models.Model):
-    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name="items")
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=455)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -95,7 +98,7 @@ class Order(models.Model):
     - It will be copied to the payment information email
     - it's not to be adjusted by customers
     """
-    purchase_date = models.DateTimeField(auto_now_add=True, blank=True)
+    purchase_date = models.DateTimeField(default=timezone.now, editable=False, blank=True)
     """
     - Total amount is instantly updated when a course is added or removed from the list
     """

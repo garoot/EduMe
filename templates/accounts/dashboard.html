@@ -18,7 +18,7 @@
 
       {% if user.profile.is_instructor %}
       <h1>You're an Instructor???! WOW</h1>
-      <li> <a href="{% url "courses:create_courses" %}">Create a Course</a> </li>
+      <a href="{% url 'courses:create_course' %}">New Course</a>
       {% endif %}
 
     {% endif %}

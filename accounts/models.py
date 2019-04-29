@@ -61,7 +61,13 @@ class Profile(models.Model):
     def __str__(self):
         return 'Profile of the user {}'.format(self.user.username)
 
+@receiver(post_save, sender=Profile)
+def create_course_list(sender, instance, created, **kwargs):
 
+    if instance.is_instructor:
+        InstructorCoursesList.objects.get_or_create(profile=instance)
+    else:
+        print("is_instructor is False")
 @receiver(post_save, sender=Profile)
 def create_student(sender, instance, created, **kwargs):
     """
@@ -74,10 +80,10 @@ def create_student(sender, instance, created, **kwargs):
         """
         the following model must be created for all students as they might apply to become instructors
         """
-        InstructorApplication.objects.get_or_create(profile = instance)
-
-
-
+        try:
+            InstructorApplication.objects.get_or_create(profile = instance)
+        except InstructorApplication.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
     else:
         print("is_student is False, change the field to True")
 
@@ -177,13 +183,13 @@ class InstructorBankingInfo(models.Model):
     banking_info = models.CharField(max_length=455)
 
 class InstructorCoursesList(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='courses')
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='course_lists')
 
 """
 This will be automatically created once the InstructorInfo is created
 """
 class InstructorReport(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='report')
-    instructor_revenue = models.FloatField(max_length=200, blank=True)
-    number_of_students = models.IntegerField(blank=True)
-    rating = models.FloatField(blank=True)
+    instructor_revenue = models.FloatField(max_length=200,  null=True)
+    number_of_students = models.IntegerField(null=True)
+    rating = models.FloatField(null=True)

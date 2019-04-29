@@ -4,8 +4,11 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, UserRegistrationForm, InstructorApplicationForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import InstructorApplication
+from .models import InstructorApplication, Profile
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def index(request):
@@ -19,8 +22,11 @@ def index(request):
     """
 @login_required
 def list_applications(request):
+    try:
+        applications = InstructorApplication.objects.all().filter(status="submitted")
+    except InstructorApplication.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
 
-    applications = InstructorApplication.objects.all().filter(status="submitted")
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
     """
@@ -30,7 +36,10 @@ def list_applications(request):
     """
 @login_required
 def display_application(request, oid):
-    application = InstructorApplication.objects.get(id=oid)
+    try:
+        application = InstructorApplication.objects.filter(id=oid)[0]
+    except InstructorApplication.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
     return render(request, 'accounts/application_process.html', {'application':application})
 
 """
@@ -65,18 +74,21 @@ def process_application(request, approved, oid):
         - change is_instructor to True
         - change application status to processed
     """
-
-
     # Better to return list_applications above :)
-    applications=InstructorApplication.objects.all().filter(status='submitted')
+    try:
+        applications=InstructorApplication.objects.all().filter(status='submitted')
+    except InstructorApplication.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
 
 
 @login_required
 def edit_profile(request):
+    current_profile = request.user.profile
     if request.method == 'POST':
-        profile_form = ProfileUpdateForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        profile_form = ProfileUpdateForm(instance=current_profile, data=request.POST, files=request.FILES)
         if profile_form.is_valid():
             profile_form.save()
         else:
@@ -95,7 +107,7 @@ def instructor_application(request):
         1- create a new instructor application model
         2- link it to the instructor profile
         """
-        application = InstructorApplication(profile=instructor_profile)
+        application = InstructorApplication.objects.create(profile=instructor_profile)
         """
         3- give it as an instance below
         """
