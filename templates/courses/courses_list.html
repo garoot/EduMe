@@ -5,10 +5,11 @@
 <div class="jumbotron">
   <h1>My Courses</h1>
 
-  {% if user.is_instructor %}
+  {% if user.profile.is_instructor %}
     {% for course in courses %}
-    <li> <a href="{% url "courses:display_courses" oid=course.id %}">{{course.title}}</a> </li>
+    <li><a href="{% url "courses:edit_course" oid=course.id %}">{{course.course_title}}</a></li>
     {% endfor %}
+    <a href="{% url 'courses:create_course' %}">New Course</a>
   {% endif %}
 
   {% if request.GET.next %}

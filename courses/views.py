@@ -12,6 +12,23 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your views here.
 @login_required
+def edit_course(request, oid):
+    try:
+        course = Course.objects.filter(id=oid)[0]
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    if request.method == 'POST':
+        edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+        if new_course_form.is_valid():
+            new_course_form.save()
+        else:
+            messages.error(request, 'error creating the course')
+    else:
+        edit_course_form = CourseInfoForm(instance=course)
+    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form})
+
+@login_required
 def list_courses(request):
     profile=request.user.profile
     course_list = InstructorCoursesList.objects.filter(profile=profile)[0]
@@ -21,6 +38,7 @@ def list_courses(request):
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned")
     return render(request, 'courses/courses_list.html', {'courses':courses})
+
 @login_required
 def create_course(request):
     profile=request.user.profile

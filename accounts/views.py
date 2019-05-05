@@ -82,8 +82,6 @@ def process_application(request, approved, oid):
 
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
-
-
 @login_required
 def edit_profile(request):
     current_profile = request.user.profile
