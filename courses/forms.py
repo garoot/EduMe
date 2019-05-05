@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.models import inlineformset_factory
 # from django.contrib.auth.models import User
 from .models import Course, CourseSection, CourseReport, Video, File, OrderItem, Order, Image, Category, Subcategory
 
@@ -24,6 +25,9 @@ class CourseInfoForm(forms.ModelForm):
         #      'course_category': forms.TextInput( attrs={'required': True} ),
         #      'course_subcategory': forms.TextInput( attrs={'required': True} ),
         #      }
+CourseSectionFormSet = inlineformset_factory(Course, CourseSection,
+                    fields =['section_num', 'section_name'],
+                    extra=1, can_delete=True)
 
 class CourseSectionForm(forms.ModelForm):
     class Meta:

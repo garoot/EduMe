@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import CourseInfoForm
+from .forms import CourseInfoForm, CourseSectionFormSet
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import InstructorCoursesList, Profile
@@ -21,6 +21,8 @@ def create_course(request):
     # course_list.save()
 
     course = Course(instructor_course_list=course_list)
+    section_formset = CourseSectionFormSet(instance=course)
+
 
     if request.method == 'POST':
         new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
@@ -31,4 +33,4 @@ def create_course(request):
     else:
         print("here...")
         new_course_form = CourseInfoForm()
-    return render(request, 'courses/create_course.html', {'new_course_form':new_course_form})
+    return render(request, 'courses/create_course.html', {'new_course_form':new_course_form, 'section_formset':section_formset})
