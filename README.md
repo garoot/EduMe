@@ -8,7 +8,7 @@ https://appdividend.com/2018/03/28/how-to-install-django-in-mac/#Step_4Install_D
 You don't have to create a new Django project since we already have one. In the terminal:
 - Go to EduMe/ folder 
 - source activate nameOfEnvironment
-The next two steps only do them when you first setup the project, and when you make changes to models.py and admins.py
+#### The next two steps only do them when you first setup the project, and when you make changes to models.py and admins.py
 - python manage.py makemigrations
 - python manage.py migrate
 - python manage.py runserver
