@@ -11,7 +11,16 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 # Create your views here.
+@login_required
+def list_courses(request):
+    profile=request.user.profile
+    course_list = InstructorCoursesList.objects.filter(profile=profile)[0]
 
+    try:
+        courses = Course.objects.all().filter(instructor_course_list=course_list)
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
+    return render(request, 'courses/courses_list.html', {'courses':courses})
 @login_required
 def create_course(request):
     profile=request.user.profile

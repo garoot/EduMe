@@ -6,4 +6,6 @@ app_name='courses'
 
 urlpatterns = [
     url(r'^create_course/$', views.create_course, name='create_course')
+    url(r'^create_course/$', views.list_courses, name='list_courses')
+
 ]

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %} Instructors' Applications Page {% endblock %}
+
+{% block body_block %}
+<div class="jumbotron">
+  <h1>My Courses</h1>
+
+  {% if user.is_instructor %}
+    {% for course in courses %}
+    <li> <a href="{% url "courses:display_courses" oid=course.id %}">{{course.title}}</a> </li>
+    {% endfor %}
+  {% endif %}
+
+  {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% endif %}
+</div>
+{% endblock %}
