@@ -12,9 +12,32 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your views here.
 @login_required
-def edit_course(request, oid):
+def create_section(request, oid):
+
     try:
         course = Course.objects.filter(id=oid)[0]
+
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    if request.method == 'POST':
+        section_formset =  CourseSectionFormSet(instance=course, data=request.POST, files=request.FILES)
+        if section_formset.is_valid():
+            section_formset.save()
+            # section_formset = CourseSectionFormSet(instance=course)
+        else:
+            messages.error(request, 'error creating the course')
+
+    section_formset = CourseSectionFormSet(instance=course)
+    return render(request, 'courses/create_section.html', {'section_formset':section_formset, 'course':course})
+
+@login_required
+def edit_course(request, oid):
+
+    try:
+        course = Course.objects.filter(id=oid)[0]
+        section_formset = CourseSectionFormSet(instance=course)
+
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
@@ -26,7 +49,7 @@ def edit_course(request, oid):
             messages.error(request, 'error creating the course')
     else:
         edit_course_form = CourseInfoForm(instance=course)
-    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form})
+    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form, 'section_formset':section_formset, 'course':course})
 
 @login_required
 def list_courses(request):

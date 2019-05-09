@@ -28,6 +28,7 @@ class CourseInfoForm(forms.ModelForm):
 CourseSectionFormSet = inlineformset_factory(Course, CourseSection,
                     fields =['section_num', 'section_name'],
                     extra=1, can_delete=True)
+                
 
 class CourseSectionForm(forms.ModelForm):
     class Meta:

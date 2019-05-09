@@ -10,6 +10,7 @@
     {% if request.GET.next %}
       <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}
+    <a href="{% url 'courses:create_section' oid=course.id %}">Create a Section</a>
     <input type="submit" class="btn btn-primary" value="Save">
   </form>
 </div>
