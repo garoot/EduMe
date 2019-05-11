@@ -37,9 +37,13 @@ def edit_course(request, oid):
     try:
         course = Course.objects.filter(id=oid)[0]
         section_formset = CourseSectionFormSet(instance=course)
-
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
+
+    try:
+        sections = CourseSection.objects.all().filter(course=course)
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
 
     if request.method == 'POST':
         edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
@@ -49,7 +53,16 @@ def edit_course(request, oid):
             messages.error(request, 'error creating the course')
     else:
         edit_course_form = CourseInfoForm(instance=course)
-    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form, 'section_formset':section_formset, 'course':course})
+    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form, 'section_formset':section_formset, 'course':course, 'sections':sections})
+
+@login_required
+def edit_section(request, oid):
+    try:
+        section = CourseSection.objects.filter(id=oid)[0]
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    return render(request, 'courses/edit_section.html', {'section':section})
 
 @login_required
 def list_courses(request):
