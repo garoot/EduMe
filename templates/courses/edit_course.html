@@ -10,16 +10,16 @@
     {% if request.GET.next %}
       <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}
-    <a href="{% url 'courses:create_section' oid=course.id %}">Create a Section</a>
+    <a href="{% url 'courses:create_section' course_id=course.id %}">Create a Section</a>
     <input type="submit" class="btn btn-primary" value="Save">
   </form>
-  <div>
-    <h1>Course Sections</h1>
-    {% for section in sections %}
-    <li><a href="{% url "courses:edit_section" oid=section.id %}">{{section.section_name}}</a></li>
-    {% endfor %}
-  </div>
 </div>
 
+<div class="jumbotron">
+  <h1>Course Sections</h1>
+  {% for section in sections %}
+  <li><a href="{% url "courses:edit_section" section_id=section.id %}">{{section.section_name}}</a></li>
+  {% endfor %}
+</div>
 
 {% endblock %}

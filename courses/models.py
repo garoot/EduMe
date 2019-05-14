@@ -14,7 +14,11 @@ COURSE_LEVELS=(
     ('1', 'Intermediate'),
     ('2', 'Advanced'),
     )
-
+CONTENT_TYPE=(
+    ('video', 'Video'),
+    ('image', 'Image'),
+    ('file', 'File'),
+    )
 class Category(models.Model):
     category=models.CharField(max_length=255)
 
@@ -57,38 +61,34 @@ class CourseSection(models.Model):
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
-class Content(models.Model):
-    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE , limit_choices_to={'model__in':('File', 'Video', 'Image')})
-    object_id = models.PositiveIntegerField()
-    item = GenericForeignKey('content_type', 'object_id')
+# class Content(models.Model):
+#     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE , limit_choices_to={'model__in':('File', 'Video', 'Image')})
+#     object_id = models.PositiveIntegerField()
+#     item = GenericForeignKey('content_type', 'object_id')
 
-class ItemBase(models.Model):
-    content = models.ForeignKey(Content, on_delete=models.CASCADE, null=True)
+class ContentItem(models.Model):
+    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="files")
     title = models.CharField(max_length=455)
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
+    content_type = models.CharField(max_length=10, choices=CONTENT_TYPE, default="None")
+    file = models.FileField(upload_to='courses/contents/%Y/%m/%d')
 
     def __str__(self):
         return self.title
 
-class File(ItemBase):
-    """
-    before this line, we must identify the course category because..
-    ..files will be saved into different folders based on that
-    """
-    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to="")
-class Video(ItemBase):
-    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="videos")
-    file = models.FileField(upload_to="")
-
-class Image(ItemBase):
-    course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="images")
-    file = models.FileField(upload_to="")
+# class File(ItemBase):
+#     """
+#     before this line, we must identify the course category because..
+#     ..files will be saved into different folders based on that
+#     """
+#     file = models.FileField(upload_to="")
+# class Video(ItemBase):
+#     file = models.FileField(upload_to="")
+#
+# class Image(ItemBase):
+#     file = models.FileField(upload_to="")
 
 # AKA cart
 class Order(models.Model):

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 # from django.contrib.auth.models import User
-from .models import Course, CourseSection, CourseReport, Video, File, OrderItem, Order, Image, Category, Subcategory
+from .models import Course, CourseSection, CourseReport, ContentItem, OrderItem, Order, Category, Subcategory
 
 class CourseInfoForm(forms.ModelForm):
     class Meta:
@@ -28,8 +28,22 @@ class CourseInfoForm(forms.ModelForm):
 CourseSectionFormSet = inlineformset_factory(Course, CourseSection,
                     fields =['section_num', 'section_name'],
                     extra=1, can_delete=True)
-                
+#
+# VideoContentFormSet = inlineformset_factory(CourseSection, Video,
+#                     fields =['title', 'file'],
+#                     extra=1, can_delete=True)
+#
+# FileContentFormSet = inlineformset_factory(CourseSection, File,
+#                     fields =['title', 'file'],
+#                     extra=1, can_delete=True)
+#
+# ImageContentFormSet = inlineformset_factory(CourseSection, Image,
+#                     fields =['title', 'file'],
+#                     extra=1, can_delete=True)
 
+ContentFormSet = inlineformset_factory(CourseSection, ContentItem,
+                    fields =['title','content_type', 'file'],
+                    extra=1, can_delete=True)
 class CourseSectionForm(forms.ModelForm):
     class Meta:
         model = CourseSection
@@ -38,3 +52,7 @@ class CourseSectionForm(forms.ModelForm):
         #     'section_num': forms.IntegerField( attrs={'required': True}),
         #     'section_name': forms.TextInput( attrs={'required': True}),
         # }
+class ContentForm(forms.ModelForm):
+    class Meta:
+        model = ContentItem
+        fields =['title', 'content_type', 'file']

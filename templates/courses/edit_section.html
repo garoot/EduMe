@@ -1,9 +1,26 @@
 {% extends "base.html" %}
-{% block title %} Instructors' Applications Page {% endblock %}
+{% block title %} Section Edit Page {% endblock %}
 
 {% block body_block %}
 <div class="jumbotron">
-  <h1>Nothing Yet!</h1>
+  <h1> Edit Section Info </h1>
+    <form method="POST" enctype='multipart/form-data'>
+      {{edit_section_form.as_p}}
+      {% csrf_token %}
+      <a href="{% url 'courses:create_content' section_id=section.id %}">Add Content</a>
+      <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+</div>
 
+<div class="jumbotron">
+  <h1>Section Contents</h1>
+  {% for content in contents %}
+  <li><a href="{% url "courses:edit_content" content_id=content.id %}">{{content.title}}</a></li>
+  {% endfor %}
+</div>
+
+    {% if request.GET.next %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% endif %}
 
 {% endblock %}
