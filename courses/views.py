@@ -13,6 +13,26 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your views here.
 
+def list_courses(request, category, subcategory):
+    if category:
+        try:
+            courses = Course.objects.filter(course_category=category)
+        except Course.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+    if subcategory:
+        try:
+            courses = Course.objects.filter(course_subcategory=subcategory)
+        except Course.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+    else:
+        try:
+            courses = Course.objects.all()
+        except Course.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+
+    return render(request, 'courses/shop/list_courses.html', {'courses':courses})
+
+    
 @login_required
 def create_content(request, section_id):
     # content_model = get_model(model_name)
