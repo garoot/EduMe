@@ -13,13 +13,16 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your views here.
 
-def list_courses(request, category, subcategory):
-    if category:
+def index(request):
+    return render(request, 'EduMe/index.html')
+
+def display_catalog(request, category_id=None, subcategory_id=None, type=None):
+    if category_id:
         try:
             courses = Course.objects.filter(course_category=category)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
-    if subcategory:
+    if subcategory_id:
         try:
             courses = Course.objects.filter(course_subcategory=subcategory)
         except Course.MultipleObjectsReturned:
@@ -30,9 +33,19 @@ def list_courses(request, category, subcategory):
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
 
-    return render(request, 'courses/shop/list_courses.html', {'courses':courses})
+    try:
+        categories = Category.objects.all()
+    except Category.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
 
-    
+    try:
+        subcategories = Subcategory.objects.all()
+    except Subcategory.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories})
+
+
 @login_required
 def create_content(request, section_id):
     # content_model = get_model(model_name)

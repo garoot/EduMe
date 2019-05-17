@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% block title %} Home Page {% endblock %}
 
+<!-- This will contain the parts that are common to all catalog display pages -->
 {% block body_block %}
 <div class="jumbotron">
   <h1>HomePage</h1>
+
   <body>
     <div id="content">
      {% block content %}
      {% endblock %}
    </div>
   </body>
+
 </div>
 {% endblock %}

@@ -12,7 +12,7 @@ User = get_user_model()
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'EduMe/index.html')
 
     """
     the function list_applications():

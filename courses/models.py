@@ -19,6 +19,12 @@ CONTENT_TYPE=(
     ('image', 'Image'),
     ('file', 'File'),
     )
+COURSE_TYPES=(
+    ('academic', 'Academic Learning'),
+    ('practical', 'Practical Learning'),
+    ('tech', 'Tech-Related Courses'),
+    ('theory', 'Theoretical Learning'),
+)
 class Category(models.Model):
     category=models.CharField(max_length=255)
 
@@ -48,6 +54,7 @@ class Course(models.Model):
     course_picture = models.ImageField(upload_to='courses/%Y/%m/%d', null=True)
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
+    course_type = models.CharField(max_length=25, choices=COURSE_TYPES, default="None")
     course_rating = models.FloatField(null=True)
     #course_length is automatically calculated when the course is created
     course_length = models.FloatField(null=True)
