@@ -8,7 +8,18 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
 
-
+CATEGORIES =(
+    ('0', 'Science'),
+    ('1', 'Math & Algebra'),
+    ('2', 'Development'),
+    ('none', 'None'),
+    )
+SUBCATEGORIES=(
+    ('0', 'Web Development'),
+    ('1', 'Calculus I'),
+    ('2', 'Programming'),
+    ('none', 'None'),
+    )
 COURSE_LEVELS=(
     ('0', 'Beginner'),
     ('1', 'Intermediate'),
@@ -20,20 +31,21 @@ CONTENT_TYPE=(
     ('file', 'File'),
     )
 COURSE_TYPES=(
+    ('none', 'None'),
     ('academic', 'Academic Learning'),
     ('practical', 'Practical Learning'),
     ('tech', 'Tech-Related Courses'),
     ('theory', 'Theoretical Learning'),
 )
 class Category(models.Model):
-    category=models.CharField(max_length=255)
+    name=models.CharField(max_length=255, default="", unique=True)
 
     def __str__(self):
-        return self.category
+        return self.name
 
 class Subcategory(models.Model):
     category=models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
-    subcategory=models.CharField(max_length=255)
+    subcategory=models.CharField(max_length=255, primary_key=True, unique=True)
 
     def __str__(self):
         return self.subcategory
@@ -53,7 +65,10 @@ class Course(models.Model):
     # should be uploaded to a folder related to images of course of the same category
     course_picture = models.ImageField(upload_to='courses/%Y/%m/%d', null=True)
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
-    course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
+    # course_category = models.CharField(max_length=3, choices=CATEGORIES, default="None")
+    course_subcategory = models.CharField(max_length=3, choices=SUBCATEGORIES, default="None")
+
+    # course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_type = models.CharField(max_length=25, choices=COURSE_TYPES, default="None")
     course_rating = models.FloatField(null=True)
     #course_length is automatically calculated when the course is created

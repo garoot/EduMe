@@ -16,15 +16,28 @@ User = get_user_model()
 def index(request):
     return render(request, 'EduMe/index.html')
 
-def display_catalog(request, category_id=None, subcategory_id=None, type=None):
-    if category_id:
+def display_catalog(request, category=None, subcategory=None, type=None):
+    category_obj = None
+    if category:
+        print("Passed category condition")
+        try:
+            category_obj = Category.objects.filter(id=category)[0]
+        except Category.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+
         try:
             courses = Course.objects.filter(course_category=category)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
-    if subcategory_id:
+
+    if subcategory:
         try:
-            courses = Course.objects.filter(course_subcategory=subcategory)
+            subcategory_obj = Subcategory.objects.filter(subcategory=subcategory)[0]
+        except Subcategory.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+
+        try:
+            courses = Course.objects.all().filter(course_subcategory=category.subcategory)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
     else:
@@ -43,8 +56,7 @@ def display_catalog(request, category_id=None, subcategory_id=None, type=None):
     except Subcategory.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
-    return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories})
-
+    return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories, 'category':category_obj})
 
 @login_required
 def create_content(request, section_id):
