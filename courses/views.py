@@ -18,18 +18,28 @@ def index(request):
 
 def display_catalog(request, category=None, subcategory=None, type=None):
     category_obj = None
+    print("Category: {}".format(category))
+    if category==None :
+        try:
+            courses = Course.objects.all()
+        except Course.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
+        subcategory = None
+
     if category:
         print("Passed category condition")
+
         try:
             category_obj = Category.objects.filter(id=category)[0]
+            print("Category: {}".format(category_obj.name))
         except Category.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
 
         try:
-            courses = Course.objects.filter(course_category=category)
+            courses = Course.objects.filter(course_category=category_obj)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
-
+            
     if subcategory:
         try:
             subcategory_obj = Subcategory.objects.filter(subcategory=subcategory)[0]
@@ -37,12 +47,7 @@ def display_catalog(request, category=None, subcategory=None, type=None):
             print("Exception ERROR: multiple objects returned!")
 
         try:
-            courses = Course.objects.all().filter(course_subcategory=category.subcategory)
-        except Course.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned!")
-    else:
-        try:
-            courses = Course.objects.all()
+            courses = Course.objects.all().filter(course_subcategory=subcategory_obj)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
 
