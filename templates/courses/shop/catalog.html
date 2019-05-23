@@ -7,13 +7,18 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="sidebar">
   <h3>Categories</h3>
   <ul>
-    <li><a href="{% url 'courses:display_catalog' %}">All</a></li>
+    <div>
+      <li><a href="{% url 'courses:display_catalog' %}">All</a></li>
+    </div>
+
       {% for c in categories %}
-      
-      <li><a href="{% url 'courses:display_catalog_category' category=c.id  %}">{{c.name}}</a></li>
+      <div>
+        <li><a href="{% url 'courses:display_catalog_category' category=c.id  %}">{{c.name}}</a></li>
+      </div>
       {% endfor %}
 
   </ul>
@@ -25,17 +30,14 @@
         <div class="row">
 
           <div class="course-card">
-
-            <a href="#">
+            <a href="{% url 'courses:course_page' course_id=course.id  %}">
               <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:100%">
             </a>
-
             <h1>{{course.course_name}}</h1>
             <p class="course-card-price">${{course.course_price}}</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <p> <button type="button" name="button">Add to Cart</button> </p>
           </div>
-
         </div>
 
       {% endfor %}

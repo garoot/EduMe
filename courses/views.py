@@ -16,6 +16,15 @@ User = get_user_model()
 def index(request):
     return render(request, 'EduMe/index.html')
 
+def display_course_page(request, course_id):
+    try:
+        course = Course.objects.filter(id=course_id)[0]
+
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    return render(request, 'courses/contents/course_page.html', {'course':course})
+
 def display_catalog(request, category=None, subcategory=None, type=None):
     category_obj = None
     print("Category: {}".format(category))
@@ -39,7 +48,7 @@ def display_catalog(request, category=None, subcategory=None, type=None):
             courses = Course.objects.filter(course_category=category_obj)
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
-            
+
     if subcategory:
         try:
             subcategory_obj = Subcategory.objects.filter(subcategory=subcategory)[0]

@@ -1,0 +1,38 @@
+{% extends "base_catalog.html" %}
+{% load static %}
+
+{% block title %} Home Page {% endblock %}
+
+{% block body_block %}
+{% endblock %}
+
+{% block content %}
+
+<div class="course-card">
+  <a href="#">
+    <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:100%">
+  </a>
+  <h1>{{course.course_name}}</h1>
+  <p class="course-card-price">${{course.course_price}}</p>
+  <p> <button type="button" name="button">Add to Cart</button> </p>
+</div>
+
+<div class="course-info">
+
+  <h2>Course Outcomes</h2>
+  <p>{{course.course_outcomes}}</p><br>
+
+  <h2>Requirements</h2>
+  <p>{{course.course_requirements}}</p><br>
+
+  <h2>Course Description</h2>
+  <p>{{course.course_description}}</p><br>
+
+  <h2>Course Outline</h2>
+  <p>{{course.course_outline}}</p><br>
+
+</div>
+
+
+
+{% endblock %}
