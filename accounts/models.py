@@ -19,9 +19,10 @@ EDUCATION_DEGREES =(
     ('PH', 'PhD'),
 )
 APPLICATION_STATUS=(
-    ('None', 'None'),
+    ('none', 'None'),
     ('submitted', 'Submitted'),
-    ('processed', 'Decision has been made')
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected')
 )
 
 
@@ -31,9 +32,9 @@ def create_profile(sender, instance, created, **kwargs):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name = 'profile')
-    country = models.CharField(max_length=255)
+    country = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=254, blank=True)
-    nationality = models.CharField(max_length=255)
+    nationality = models.CharField(max_length=255, blank=True)
     dob = models.DateField(blank=True, null=True, verbose_name="Date of Birth")
     """
     The following boolean fields to be controlled by admins and not to be shown to profiles:
@@ -45,12 +46,29 @@ class Profile(models.Model):
     is_promoter = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     """
+    the variable below keeps track of the status of the most recent application
+    """
+    instructor_application_status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
+
+    """
     the image files below will be stored in folder 'user' followed by the date it is saved
     """
-    photo = models.ImageField(upload_to='users/%Y/%m/%d', null=True)
+    photo = models.ImageField(upload_to='users/%Y/%m/%d', null=True, blank=True)
 
     def __str__(self):
         return 'Profile of the user {}'.format(self.user.username)
+
+    """
+    this function return true if the application should show up to a user or not
+    under two conditions:
+    1-  instructor_application_status = 'rejected' or
+    2- instructor_application_status = 'None'
+    """
+    def show_instructor_application(self):
+        if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'none':
+            return True
+        else:
+            return False
 
 @receiver(post_save, sender=Profile)
 def create_course_list(sender, instance, created, **kwargs):
@@ -164,11 +182,7 @@ class InstructorResume(models.Model):
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
     status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
 
-    def is_submitted(self):
-        if self.status == 'submitted':
-            return True
-        else:
-            return False
+
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
     first_name = models.CharField(max_length=255)
