@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, InstructorApplication
+from .models import Profile, InstructorResume
 
 class LoginForm(forms.Form):
    username = forms.CharField()
@@ -36,7 +36,7 @@ class ProfileUpdateForm(forms.ModelForm):
         'city': forms.TextInput(attrs={'placeholder': 'City of Residence'}),
         'nationality': forms.TextInput(attrs={'placeholder': 'Nationality'})
         }
-class InstructorApplicationForm(forms.ModelForm):
+class InstructorResumeForm(forms.ModelForm):
     class Meta:
-        model = InstructorApplication
+        model = InstructorResume
         fields = ['degree', 'major', 'experience']

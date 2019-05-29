@@ -9,7 +9,9 @@
     {% if request.user.is_authenticated %}
     <ul>
       <li> <a href="{% url "accounts:edit_profile" %}">Profile Info</a> </li>
+      {% if user.profile.is_instructor == 'False' %}
       <li> <a href="{% url "accounts:instructor_application" %}">Become an Instructor</a> </li>
+      {% endif %}
     </ul>
       {% if user.is_superuser %}
       <h1>WOW! you're a super user!?</h1>

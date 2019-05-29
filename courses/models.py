@@ -3,10 +3,11 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
-from accounts.models import InstructorReport, InstructorCoursesList, Profile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
+from django.apps import apps
+
 
 CATEGORIES =(
     ('0', 'Science'),
@@ -52,7 +53,7 @@ class Subcategory(models.Model):
         return self.subcategory
 # Create your models here.
 class Course(models.Model):
-    instructor_course_list = models.ForeignKey(InstructorCoursesList, on_delete=models.SET_NULL, related_name="courses", null=True)
+    instructor_course_list = models.ForeignKey('accounts.InstructorCoursesList', on_delete=models.SET_NULL, related_name="courses", null=True)
     course_name = models.CharField(max_length=255, verbose_name='Name of the Course')
     course_topic = models.CharField(max_length=255)
     course_price = models.FloatField()
@@ -115,7 +116,7 @@ class ContentItem(models.Model):
 
 # AKA cart
 class Order(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='order_lists')
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, related_name='order_lists')
     """
     - Purchase date is automatically adjusted to "today's date" upon the completion of a purchase
     - It will be copied to the payment information email
@@ -137,7 +138,7 @@ class CourseReport(models.Model):
     """
     the course report is linked to the instructor's report instantly
     """
-    instructor_report = models.ForeignKey(InstructorReport, on_delete=models.SET_NULL, related_name="course_report", null=True)
+    instructor_report = models.ForeignKey('accounts.InstructorReport', on_delete=models.SET_NULL, related_name="course_report", null=True)
 
 """
 When the user adds a course to the order list, OrderItem is created

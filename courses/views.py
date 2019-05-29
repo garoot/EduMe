@@ -234,6 +234,7 @@ def create_course(request):
         new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
         if new_course_form.is_valid():
             new_course_form.save()
+            print("Created course..")
         else:
             messages.error(request, 'error creating the course')
     else:

@@ -9,9 +9,7 @@
 {% block content %}
 
 <div class="course-card">
-  <a href="#">
     <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:100%">
-  </a>
   <h1>{{course.course_name}}</h1>
   <p class="course-card-price">${{course.course_price}}</p>
   <p> <button type="button" name="button">Add to Cart</button> </p>

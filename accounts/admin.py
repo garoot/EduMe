@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, InstructorBankingInfo, InstructorCoursesList, InstructorApplication, InstructorReport, PayPalInfo, PaymentInfo, CardPaymentInfo, WishList, WishListCourse, PurchaseList, PurchasedCourse
+from .models import Profile, InstructorBankingInfo, InstructorCoursesList, InstructorResume, InstructorReport, PayPalInfo, PaymentInfo, CardPaymentInfo, WishList, WishListCourse, PurchaseList, PurchasedCourse
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'dob', 'photo']
@@ -7,7 +7,7 @@ class ProfileAdmin(admin.ModelAdmin):
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(InstructorBankingInfo)
 admin.site.register(InstructorCoursesList)
-admin.site.register(InstructorApplication)
+admin.site.register(InstructorResume)
 admin.site.register(InstructorReport)
 admin.site.register(PayPalInfo)
 admin.site.register(PaymentInfo)

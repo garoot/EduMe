@@ -1,9 +1,13 @@
 from django.db import models
+# from courses.models import Course
+# from courses.models import Course
 # from django.contrib.auth.models import profile
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
+
+# Course = apps.get_model('courses','Course')
 
 User = get_user_model()
 # Create your models here.
@@ -19,19 +23,6 @@ APPLICATION_STATUS=(
     ('submitted', 'Submitted'),
     ('processed', 'Decision has been made')
 )
-class Course(models.Model):
-    course_name = models.CharField(max_length=255)
-    course_topic = models.CharField(max_length=255)
-    course_price = models.FloatField()
-    course_title = models.CharField(max_length=255)
-    course_outline = models.TextField()
-    course_requirements = models.TextField()
-    course_description = models.TextField()
-    target_students = models.TextField()
-    # course_category = models.ForeignKey()
-    # course_subcategory = models.ForeignKey()
-    # course_type = models.ForeignKey()
-    # course_rating = models.FloatField()
 
 
 @receiver(post_save, sender=User)
@@ -81,8 +72,8 @@ def create_student(sender, instance, created, **kwargs):
         the following model must be created for all students as they might apply to become instructors
         """
         try:
-            InstructorApplication.objects.get_or_create(profile = instance)
-        except InstructorApplication.MultipleObjectsReturned:
+            InstructorResume.objects.get_or_create(profile = instance)
+        except InstructorResume.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
     else:
         print("is_student is False, change the field to True")
@@ -118,8 +109,8 @@ def create_instructor(sender, instance, created, **kwargs):
 class WishList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='wish_list')
 class WishListCourse(models.Model):
-    wish_list = models.ForeignKey(WishList, on_delete=models.CASCADE, related_name='wish_list_course')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    wish_list = models.ForeignKey(WishList, on_delete=models.CASCADE, related_name='courses')
+    course = models.ForeignKey('courses.Course', on_delete=models.CASCADE)
 """
 """
 
@@ -131,7 +122,7 @@ class PurchaseList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='purchase_list')
 class PurchasedCourse(models.Model):
     purchase_list = models.ForeignKey(PurchaseList, on_delete=models.CASCADE, related_name='purchased_course')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey('courses.Course', on_delete=models.CASCADE)
 """
 """
 
@@ -166,12 +157,18 @@ Instructor-related classes
 
 They will all be automatically created if the is_instructor field of the profile is True
 """
-class InstructorApplication(models.Model):
+class InstructorResume(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
     degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, default='None')
     major = models.CharField(max_length=344)
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
     status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
+
+    def is_submitted(self):
+        if self.status == 'submitted':
+            return True
+        else:
+            return False
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
     first_name = models.CharField(max_length=255)

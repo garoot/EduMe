@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm, UserRegistrationForm, InstructorApplicationForm, ProfileUpdateForm
+from .forms import LoginForm, UserRegistrationForm, InstructorResumeForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import InstructorApplication, Profile
+from .models import InstructorResume, Profile
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
@@ -23,8 +23,8 @@ def index(request):
 @login_required
 def list_applications(request):
     try:
-        applications = InstructorApplication.objects.all().filter(status="submitted")
-    except InstructorApplication.MultipleObjectsReturned:
+        applications = InstructorResume.objects.all().filter(status="submitted")
+    except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
     return render(request, 'accounts/applications_list.html', {'applications':applications})
@@ -37,8 +37,8 @@ def list_applications(request):
 @login_required
 def display_application(request, oid):
     try:
-        application = InstructorApplication.objects.filter(id=oid)[0]
-    except InstructorApplication.MultipleObjectsReturned:
+        application = InstructorResume.objects.filter(id=oid)[0]
+    except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
     return render(request, 'accounts/application_process.html', {'application':application})
 
@@ -54,7 +54,7 @@ def display_application(request, oid):
 def process_application(request, approved, oid):
 
     try:
-        application = InstructorApplication.objects.filter(id=oid)[0]
+        application = InstructorResume.objects.filter(id=oid)[0]
         instructor_profile=application.profile
         if approved:
             print("in the approved if..")
@@ -66,7 +66,7 @@ def process_application(request, approved, oid):
             application.status = 'processed'
 
 
-    except InstructorApplication.MultipleObjectsReturned:
+    except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
     """
@@ -76,8 +76,8 @@ def process_application(request, approved, oid):
     """
     # Better to return list_applications above :)
     try:
-        applications=InstructorApplication.objects.all().filter(status='submitted')
-    except InstructorApplication.MultipleObjectsReturned:
+        applications=InstructorResume.objects.all().filter(status='submitted')
+    except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
     return render(request, 'accounts/applications_list.html', {'applications':applications})
@@ -97,6 +97,7 @@ def edit_profile(request):
 
 @login_required
 def instructor_application(request):
+    application_status = None
     instructor_profile = request.user.profile
     if request.method == 'POST':
         """
@@ -105,22 +106,24 @@ def instructor_application(request):
         1- create a new instructor application model
         2- link it to the instructor profile
         """
-        application = InstructorApplication.objects.create(profile=instructor_profile)
+        application = InstructorResume.objects.create(profile=instructor_profile)
         """
         3- give it as an instance below
         """
-        application_form = InstructorApplicationForm(instance=application,data=request.POST)
+        application_form = InstructorResumeForm(instance=application,data=request.POST)
 
         if application_form.is_valid():
             application.status = 'submitted'
+            application_status = application.status
+
             application_form.save()
             messages.success(request, 'Successfully submitted')
         else:
             messages.error(request, 'error submitting application')
 
     else:
-        application_form = InstructorApplicationForm()
-    return render(request, 'accounts/instructor_application.html', {'form':application_form})
+        application_form = InstructorResumeForm()
+    return render(request, 'accounts/instructor_application.html', {'form':application_form, 'application_status':application_status})
 
 @login_required
 def dashboard(request):
