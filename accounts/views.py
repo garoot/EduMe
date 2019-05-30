@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, UserRegistrationForm, InstructorResumeForm, ProfileUpdateForm
@@ -7,6 +7,8 @@ from django.contrib import messages
 from .models import InstructorResume, Profile
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -25,7 +27,7 @@ def list_applications(request):
     try:
         applications = InstructorResume.objects.all().filter(status="submitted")
     except InstructorResume.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+        print("Exception ERROR: multiple objects returned! 3")
 
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
@@ -37,9 +39,9 @@ def list_applications(request):
 @login_required
 def display_application(request, oid):
     try:
-        application = InstructorResume.objects.filter(id=oid)[0]
+        application = InstructorResume.objects.filter(id=oid).first()
     except InstructorResume.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+        print("Exception ERROR: multiple objects returned! 4")
     return render(request, 'accounts/application_process.html', {'application':application})
 
 """
@@ -53,21 +55,23 @@ def display_application(request, oid):
 @login_required
 def process_application(request, approved, oid):
 
-    try:
-        application = InstructorResume.objects.filter(id=oid)[0]
-        instructor_profile=application.profile
-        if approved:
-            print("in the approved if..")
-            application.status = 'processed'
-            instructor_profile.is_instructor = True
-            application.save()
-            instructor_profile.save()
-        else:
-            application.status = 'processed'
 
+    try:
+        application = get_object_or_404(InstructorResume, pk=oid)
+        # instructor_profile=application.profile
+        if approved == '1':
+            print("in approved...")
+            application.approve()
+            # print("in the approved if..")
+            # application.status = 'accepted'
+            # instructor_profile.is_instructor = True
+            # application.save()
+            # instructor_profile.save()
+        elif approved == '0':
+            application.reject()
 
     except InstructorResume.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+        print("Exception ERROR: multiple objects returned! 1")
 
     """
     if approved:
@@ -76,28 +80,14 @@ def process_application(request, approved, oid):
     """
     # Better to return list_applications above :)
     try:
-        applications=InstructorResume.objects.all().filter(status='submitted')
+        applications=InstructorResume.objects.filter(status='submitted')
     except InstructorResume.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+        print("Exception ERROR: multiple objects returned! 2")
 
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
 @login_required
-def edit_profile(request):
-    current_profile = request.user.profile
-    if request.method == 'POST':
-        profile_form = ProfileUpdateForm(instance=current_profile, data=request.POST, files=request.FILES)
-        if profile_form.is_valid():
-            profile_form.save()
-        else:
-            print("form is invalid")
-    else:
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'accounts/edit_profile.html', {'form': profile_form})
-
-@login_required
 def instructor_application(request):
-    application_status = None
     instructor_profile = request.user.profile
     if request.method == 'POST':
         """
@@ -113,17 +103,34 @@ def instructor_application(request):
         application_form = InstructorResumeForm(instance=application,data=request.POST)
 
         if application_form.is_valid():
-            application.status = 'submitted'
-            application_status = application.status
-
-            application_form.save()
+            """
+            this submit() method will save the form and change
+            the profile.instructor_application_status and application.status
+            to 'submitted'
+            """
+            application.submit()
             messages.success(request, 'Successfully submitted')
         else:
             messages.error(request, 'error submitting application')
+        return HttpResponseRedirect(reverse("accounts:instructor_application"))
 
     else:
         application_form = InstructorResumeForm()
-    return render(request, 'accounts/instructor_application.html', {'form':application_form, 'application_status':application_status})
+    return render(request, 'accounts/instructor_application.html', {'form':application_form})
+
+@login_required
+def edit_profile(request):
+    current_profile = request.user.profile
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(instance=current_profile, data=request.POST, files=request.FILES)
+        if profile_form.is_valid():
+            profile_form.save()
+        else:
+            print("form is invalid")
+    else:
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+    return render(request, 'accounts/edit_profile.html', {'form': profile_form})
+
 
 @login_required
 def dashboard(request):

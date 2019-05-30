@@ -4,7 +4,7 @@
 {% block body_block %}
 <div class="jumbotron">
   <h1>Instructor Application</h1>
-  {% if user.show_instructor_application %}
+  {% if user.profile.show_instructor_application %}
     <form method="POST">
       {{form.as_p}}
       {% csrf_token %}
@@ -14,7 +14,7 @@
       <input type="submit" class="btn btn-primary" value="Submit">
     </form>
   {% else %}
-    <h2>You have already submitted an application</h2>
+    <h2>Your application has been submitted! thank you</h2>
   {% endif %}
 </div>
 {% endblock %}

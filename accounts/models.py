@@ -48,7 +48,7 @@ class Profile(models.Model):
     """
     the variable below keeps track of the status of the most recent application
     """
-    instructor_application_status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
+    instructor_application_status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')
 
     """
     the image files below will be stored in folder 'user' followed by the date it is saved
@@ -67,7 +67,7 @@ class Profile(models.Model):
     def show_instructor_application(self):
         if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'none':
             return True
-        else:
+        elif self.instructor_application_status == 'submitted':
             return False
 
 @receiver(post_save, sender=Profile)
@@ -89,10 +89,14 @@ def create_student(sender, instance, created, **kwargs):
         """
         the following model must be created for all students as they might apply to become instructors
         """
-        try:
-            InstructorResume.objects.get_or_create(profile = instance)
-        except InstructorResume.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned!")
+        if instance.is_instructor:
+            try:
+                InstructorResume.objects.all().filter(profile = instance).first()
+            except InstructorResume.MultipleObjectsReturned:
+                print("Exception ERROR: multiple objects returned! 5")
+        else:
+            InstructorResume.objects.create(profile = instance)
+
     else:
         print("is_student is False, change the field to True")
 
@@ -177,11 +181,34 @@ They will all be automatically created if the is_instructor field of the profile
 """
 class InstructorResume(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
-    degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, default='None')
+    degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, null=False)
     major = models.CharField(max_length=344)
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
-    status = models.CharField(max_length=5, choices=APPLICATION_STATUS, default='None')
+    status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')
 
+    def approve(self):
+        self.status = 'accepted'
+        self.profile.instructor_application_status = 'accepted'
+        self.profile.is_instructor = True
+        self.save()
+        self.profile.save()
+        print("Application approved..")
+
+
+    def reject(self):
+        self.status = 'rejected'
+        self.profile.instructor_application_status = 'rejected'
+        self.profile.is_instructor = False
+        self.save()
+        self.profile.save()
+        print("Application rejected..")
+
+    def submit(self):
+        self.status = 'submitted'
+        self.profile.instructor_application_status = 'submitted'
+        self.profile.save()
+        self.save()
+        print("Application submitted..")
 
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
