@@ -119,7 +119,7 @@ def edit_content(request, content_id):
 #     return None
 @login_required
 def edit_section(request, section_id):
-
+    print("section id: {}".format(section_id))
     try:
         section = CourseSection.objects.filter(id=section_id).first()
     except CourseSection.MultipleObjectsReturned:
@@ -134,13 +134,14 @@ def edit_section(request, section_id):
         edit_section_form = CourseSectionForm(instance=section, data=request.POST)
         if edit_section_form.is_valid():
             edit_section_form.save()
+            return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+
         else:
             messages.error(request, 'error updating the section info')
 
     else:
         edit_section_form = CourseSectionForm(instance=section)
-    content_formset = ContentFormSet(instance=section)
-    return render(request, 'courses/edit_section.html', {'edit_section_form':edit_section_form, 'section':section, 'contents':contents, 'content_formset':content_formset})
+    return render(request, 'courses/edit_section.html', {'edit_section_form':edit_section_form, 'section':section, 'contents':contents})
 
 def get_content_formsets(instance):
 
@@ -171,16 +172,19 @@ def create_section(request, course_id):
         print("Exception ERROR: multiple objects returned!")
 
     if request.method == 'POST':
-        section_form =  CourseSectionForm(instance=course, data=request.POST, files=request.FILES)
+        section_form =  CourseSectionForm(data=request.POST, files=request.FILES)
         if section_form.is_valid():
-            section = section_form.save()
+            section = section_form.save(commit=False)
+            section.course = course
+            section.save()
+            print("section id: {}".format(section.id))
             # section_formset = CourseSectionFormSet(instance=course)
             return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
 
         else:
             messages.error(request, 'error creating the course')
 
-    section_form = CourseSectionForm(instance=course)
+    section_form = CourseSectionForm()
     return render(request, 'courses/create_section.html', {'section_form':section_form, 'course':course})
 
 
@@ -196,6 +200,7 @@ def edit_course(request, oid):
         sections = CourseSection.objects.all().filter(course=course)
     except CourseSection.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned")
+
     net_sections = []
     for section in sections:
         if section.section_name != "":
@@ -205,6 +210,8 @@ def edit_course(request, oid):
         edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
         if edit_course_form.is_valid():
             edit_course_form.save()
+            return HttpResponseRedirect(reverse("courses:edit_course"))
+
         else:
             messages.error(request, 'error updating the course')
     else:
