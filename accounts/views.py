@@ -54,31 +54,22 @@ def display_application(request, oid):
 """
 @login_required
 def process_application(request, approved, oid):
-
-
     try:
         application = get_object_or_404(InstructorResume, pk=oid)
-        # instructor_profile=application.profile
-        if approved == '1':
-            print("in approved...")
-            application.approve()
-            # print("in the approved if..")
-            # application.status = 'accepted'
-            # instructor_profile.is_instructor = True
-            # application.save()
-            # instructor_profile.save()
-        elif approved == '0':
-            application.reject()
-
     except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned! 1")
 
+    if approved == '1':
+        print("in approved...")
+        application.approve()
+
+    elif approved == '0':
+        application.reject()
     """
     if approved:
         - change is_instructor to True
         - change application status to processed
     """
-    # Better to return list_applications above :)
     try:
         applications=InstructorResume.objects.filter(status='submitted')
     except InstructorResume.MultipleObjectsReturned:

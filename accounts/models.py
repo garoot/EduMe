@@ -12,7 +12,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your models here.
 EDUCATION_DEGREES =(
-    ('None', 'None'),
     ('D', 'Diploma'),
     ('B', 'Bachelor\'s Degree'),
     ('M', 'Master\'s Degree'),
@@ -24,7 +23,6 @@ APPLICATION_STATUS=(
     ('accepted', 'Accepted'),
     ('rejected', 'Rejected')
 )
-
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -77,6 +75,7 @@ def create_course_list(sender, instance, created, **kwargs):
         InstructorCoursesList.objects.get_or_create(profile=instance)
     else:
         print("is_instructor is False")
+
 @receiver(post_save, sender=Profile)
 def create_student(sender, instance, created, **kwargs):
     """
@@ -100,7 +99,6 @@ def create_student(sender, instance, created, **kwargs):
     else:
         print("is_student is False, change the field to True")
 
-
 @receiver(post_save, sender=Profile)
 def create_instructor(sender, instance, created, **kwargs):
     print('****', created)
@@ -110,9 +108,6 @@ def create_instructor(sender, instance, created, **kwargs):
         InstructorReport.objects.get_or_create(profile = instance)
     else:
         print("profile is not instructor")
-
-
-
 # @receiver(post_save, sender=Profile)
 # def create_promoter(sender, instance, created, **kwargs):
 #     if instance.is_promoter:
@@ -130,24 +125,20 @@ def create_instructor(sender, instance, created, **kwargs):
 """
 class WishList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='wish_list')
+
 class WishListCourse(models.Model):
     wish_list = models.ForeignKey(WishList, on_delete=models.CASCADE, related_name='courses')
     course = models.ForeignKey('courses.Course', on_delete=models.CASCADE)
-"""
-"""
-
 """
 - PurchaseList and PurchasedCourse are the classes related to the purchasing process
 - Only PurchaseList will be automatically created once a profile is created
 """
 class PurchaseList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='purchase_list')
+
 class PurchasedCourse(models.Model):
     purchase_list = models.ForeignKey(PurchaseList, on_delete=models.CASCADE, related_name='purchased_course')
     course = models.ForeignKey('courses.Course', on_delete=models.CASCADE)
-"""
-"""
-
 """
 - Below are classes related tothe payment process
 - PaymentInfo will be automatically created once a profile is created
@@ -172,9 +163,6 @@ class PayPalInfo(models.Model):
     profilename = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
 """
-"""
-
-"""
 Instructor-related classes
 
 They will all be automatically created if the is_instructor field of the profile is True
@@ -193,7 +181,6 @@ class InstructorResume(models.Model):
         self.save()
         self.profile.save()
         print("Application approved..")
-
 
     def reject(self):
         self.status = 'rejected'
@@ -222,7 +209,6 @@ class InstructorBankingInfo(models.Model):
 
 class InstructorCoursesList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='course_lists')
-
 """
 This will be automatically created once the InstructorInfo is created
 """
@@ -231,3 +217,11 @@ class InstructorReport(models.Model):
     instructor_revenue = models.FloatField(max_length=200,  null=True)
     number_of_students = models.IntegerField(null=True)
     rating = models.FloatField(null=True)
+
+    def add_rating(self, new_rating):
+        self.rating += new_rating
+        return self.rating
+
+    def add_student(self):
+        self.number_of_students += 1
+        print("Instructor has got a new student in InstructorReport model..")
