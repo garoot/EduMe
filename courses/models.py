@@ -80,10 +80,12 @@ class Course(models.Model):
 
 class CourseSection(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections", null=True)
-    section_num = models.IntegerField()
+    section_num = models.IntegerField(null=True)
     section_name = models.CharField(max_length = 255, blank=True)
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
+
+
 
 # class Content(models.Model):
 #     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")

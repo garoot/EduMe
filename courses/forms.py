@@ -44,6 +44,7 @@ CourseSectionFormSet = inlineformset_factory(Course, CourseSection,
 ContentFormSet = inlineformset_factory(CourseSection, ContentItem,
                     fields =['title','content_type', 'file'],
                     extra=1, can_delete=True)
+
 class CourseSectionForm(forms.ModelForm):
     class Meta:
         model = CourseSection
