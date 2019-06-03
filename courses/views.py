@@ -227,10 +227,14 @@ def edit_course(request, oid):
 
     if request.method == 'POST':
         edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
-        if edit_course_form.is_valid():
-            edit_course_form.save()
-            return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
-
+        if 'save' in request.POST:
+            if edit_course_form.is_valid():
+                edit_course_form.save()
+                return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
+        elif 'delete' in request.POST:
+            course.delete()
+            next = request.POST.get('next','/')
+            return HttpResponseRedirect(reverse('courses:list_courses'))
         else:
             messages.error(request, 'error updating the course')
     else:
