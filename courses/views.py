@@ -94,9 +94,9 @@ def create_content(request, section_id):
 
     content_formset = ContentFormSet(instance=section)
     return render(request, 'courses/create_content.html', {'content_formset':content_formset, 'section':section})
+
 @login_required
 def edit_content(request, content_id):
-
     try:
         content = ContentItem.objects.filter(id=content_id)[0]
     except ContentItem.MultipleObjectsReturned:
@@ -121,9 +121,13 @@ def edit_content(request, content_id):
 def edit_section(request, section_id):
     print("section id: {}".format(section_id))
     try:
-        section = CourseSection.objects.filter(id=section_id).first()
+        # section = CourseSection.objects.filter(id=section_id).first()
+        section = CourseSection.objects.get(pk=section_id)
     except CourseSection.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
+
+    course_id = section.course.id
+    course= Course.objects.filter(id=course_id).first()
 
     try:
         contents = ContentItem.objects.all().filter(course_section=section)
@@ -132,9 +136,15 @@ def edit_section(request, section_id):
 
     if request.method == 'POST':
         edit_section_form = CourseSectionForm(instance=section, data=request.POST)
-        if edit_section_form.is_valid():
-            edit_section_form.save()
-            return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+        if 'save' in request.POST:
+            if edit_section_form.is_valid():
+                edit_section_form.save()
+                return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+
+        elif 'delete' in request.POST:
+            section.delete()
+            return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
+
 
         else:
             messages.error(request, 'error updating the section info')
@@ -165,7 +175,6 @@ def get_content_formsets(instance):
 
 @login_required
 def create_section(request, course_id):
-
     try:
         course = Course.objects.filter(id=course_id).first()
     except Course.MultipleObjectsReturned:
@@ -190,7 +199,6 @@ def create_section(request, course_id):
 
 @login_required
 def edit_course(request, oid):
-
     try:
         course = Course.objects.filter(id=oid).first()
     except Course.MultipleObjectsReturned:
@@ -210,7 +218,7 @@ def edit_course(request, oid):
         edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
         if edit_course_form.is_valid():
             edit_course_form.save()
-            return HttpResponseRedirect(reverse("courses:edit_course"))
+            return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
 
         else:
             messages.error(request, 'error updating the course')

@@ -8,7 +8,9 @@
       {{edit_section_form.as_p}}
       {% csrf_token %}
       <a href="{% url 'courses:create_content' section_id=section.id %}">Add Content</a>
-      <input type="submit" class="btn btn-primary" value="Save">
+      <input type="submit" class="btn btn-primary" name= 'save' value="Save">
+      <input type="submit" class="btn btn-primary" name= 'delete' value="Delete Section">
+
     </form>
 </div>
 

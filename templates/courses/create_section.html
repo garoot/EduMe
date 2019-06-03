@@ -4,15 +4,14 @@
 {% block body_block %}
 <div class="jumbotron">
   <h1>  </h1>
-  {% if request.user.is_authenticated %}
-    {% if user.profile.is_instructor %}
+  {% if user.profile.is_instructor %}
 
     <form method="POST" enctype='multipart/form-data'>
       {{section_form.as_p}}
       {% csrf_token %}
       <input type="submit" class="btn btn-primary" value="Save">
     </form>
-    {% endif %}
+    
   {% endif %}
 
     {% if request.GET.next %}
