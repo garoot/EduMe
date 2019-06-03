@@ -102,10 +102,21 @@ def edit_content(request, content_id):
     except ContentItem.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
+    section_id = content.course_section.id
+    section = CourseSection.objects.filter(id=section_id).first()
+
     if request.method == 'POST':
         edit_content_form = ContentForm(instance=content, data=request.POST, files=request.FILES)
-        if edit_content_form.is_valid():
-            edit_content_form.save()
+
+        if 'save' in request.POST:
+            if edit_content_form.is_valid():
+                edit_content_form.save()
+                return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+
+        elif 'delete' in request.POST:
+            content.delete()
+            return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+
         else:
             messages.error(request, 'error updating the content')
 
