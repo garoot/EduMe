@@ -215,11 +215,17 @@ This will be automatically created once the InstructorInfo is created
 class InstructorReport(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='report')
     instructor_revenue = models.FloatField(max_length=200,  null=True)
-    number_of_students = models.IntegerField(null=True)
-    rating = models.FloatField(null=True)
+    number_of_students = models.IntegerField(default=0)
+    rating = models.FloatField(default=0)
+    rates = models.IntegerField(default=0)
 
     def add_rating(self, new_rating):
-        self.rating += new_rating
+        if self.rates == 0:
+            self.rates += 1
+            self.rating = new_rating
+        elif self.rates != 0:
+            self.rates += 1
+            self.rating = (self.rating + new_rating) / 2
         return self.rating
 
     def add_student(self):
