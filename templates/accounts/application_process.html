@@ -15,8 +15,8 @@
     </body>
   {% endif %}
   <div >
-    <a href="{% url 'accounts:finish_application' approved=0 oid=application.id %}">Reject</a>
-    <a href="{% url 'accounts:finish_application' approved=1 oid=application.id %}">Approve</a>
+    <a href="{% url 'accounts:process_application' approved=0 oid=application.id %}">Reject</a>
+    <a href="{% url 'accounts:process_application' approved=1 oid=application.id %}">Approve</a>
 
   </div>
 
