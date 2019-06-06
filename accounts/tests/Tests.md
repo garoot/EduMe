@@ -1,8 +1,8 @@
-#Tests for 'accounts' application
+# Tests for 'accounts' application
 
-##Unit Tests:
+## Unit Tests:
 
-##Integration Tests:
+## Integration Tests:
 Test Case ID: 1, login-to-dashboard
 1. Objective: check dashboard is displayed once user logs in
 2. Description: user enters credentials and clicks login
