@@ -1,7 +1,15 @@
 # Tests for 'accounts' application
-Scenarios are a bunch of integration test cases combined to check against an expected overall result. Test cases, on the other hand, are smaller integration tests. Some project requirements require the involvement of more than one integration test.
+Scenarios are a bunch of integration test cases combined to check against an expected result. Test cases, on the other hand, are smaller integration tests. Some project requirements require the involvement of more than one integration test.
 
 ## Unit Tests:
+### test_models: 
+in this part, we test the custom functions inside the models
+#### test_instructor_report_rating:
+in this unit test, we test the function add_rating() inside the model InstructorReport which containt attribute InstructorReport.rating. 
+
+
+### test_views:
+### test_forms:
 
 ## Integration Tests:
 Test Case ID: 1, login-to-dashboard
