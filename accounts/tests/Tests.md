@@ -1,4 +1,5 @@
 # Tests for 'accounts' application
+Scenarios are a bunch of integration test cases combined to check against an expected overall result. Test cases, on the other hand, are smaller integration tests. Some project requirements require the involvement of more than one integration test.
 
 ## Unit Tests:
 
@@ -18,7 +19,8 @@ Test Case ID: 3, edit-profile
 2. Description: user fills out and submits profile-edit form
 3. Expected Result: user info ==  entered information
 
-Scenario: new-instructor
+### Scenario: new-instructor
+
   Test Case ID: 4, instructor-application
   1. Objective: check user application form is displayed and linked to admin users
   2. Description: user clicks 'become instructor' and submits instructor application  
@@ -28,3 +30,4 @@ Scenario: new-instructor
   1. Objective: check application is received by admins, and processing (approve/reject) it is functional
   2. Description: admin clicks 'applications' and process them
   3. Expected Result: if approved, instructor is displayed with course management system in dashboard and 'become instructor' becomes 'track instructor application'. If rejected, application form and 'become instructor' are visible.
+
