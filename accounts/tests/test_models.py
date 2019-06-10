@@ -7,9 +7,9 @@ class TestModels:
     # def test_user(self):
     #     user = User.objects.create(username='whatever', password='1')
     #     assert user.username == 'whatever'
-    def test_instructor_report(self):
+    def test_instructor_report_rating(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         report = InstructorReport(profile=profile)
         #First rating
         report.add_rating(1)
@@ -20,7 +20,7 @@ class TestModels:
 
     def test_add_student(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         report = InstructorReport(profile=profile)
 
         report.add_student()
@@ -28,7 +28,7 @@ class TestModels:
 
     def test_approve_instructor_resume(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         resume = InstructorResume(profile=profile, degree='D')
         resume.approve()
         assert resume.status == 'accepted'
@@ -40,7 +40,7 @@ class TestModels:
 
     def test_reject_instructor_resume(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         resume = InstructorResume(profile=profile, degree='D')
         resume.reject()
         assert resume.status == 'rejected'
@@ -52,7 +52,7 @@ class TestModels:
 
     def test_submit_instructor_resume(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         resume = InstructorResume(profile=profile, degree='D')
         resume.submit()
         assert resume.status == 'submitted'
@@ -67,13 +67,13 @@ class TestModels:
     """
     def test_create_profile(self):
         user = User.objects.create(username='whatever', password='1')
-        profile = user.profile
+        profile=Profile.objects.create(user=user)
         username = profile.user.username
         assert username == 'whatever'
 
     def test_show_instructor_application(self):
         user = User.objects.create(username='whatever', password='1')
-        profile=user.profile
+        profile=Profile.objects.create(user=user)
         profile.is_instructor = True
 
         profile.instructor_application_status = 'rejected'

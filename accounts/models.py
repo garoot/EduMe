@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your models here.
 EDUCATION_DEGREES =(
+    ('none', 'None'),
     ('D', 'Diploma'),
     ('B', 'Bachelor\'s Degree'),
     ('M', 'Master\'s Degree'),
@@ -24,9 +25,9 @@ APPLICATION_STATUS=(
     ('rejected', 'Rejected')
 )
 
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-        Profile.objects.get_or_create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_profile(sender, instance, created, **kwargs):
+#         Profile.objects.get_or_create(user=instance)
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name = 'profile')
@@ -99,15 +100,17 @@ def create_student(sender, instance, created, **kwargs):
     else:
         print("is_student is False, change the field to True")
 
-@receiver(post_save, sender=Profile)
-def create_instructor(sender, instance, created, **kwargs):
-    print('****', created)
-    if instance.is_instructor:
-        InstructorBankingInfo.objects.get_or_create(profile = instance)
-        InstructorCoursesList.objects.get_or_create(profile = instance)
-        InstructorReport.objects.get_or_create(profile = instance)
-    else:
-        print("profile is not instructor")
+# @receiver(post_save, sender=Profile)
+# def create_instructor(sender, instance, created, **kwargs):
+#     print('****create_instructor****', created)
+#     if instance.is_instructor:
+#         InstructorBankingInfo.objects.get_or_create(profile = instance)
+#         InstructorCoursesList.objects.get_or_create(profile = instance)
+#         InstructorReport.objects.get_or_create(profile = instance)
+#     else:
+#         print("profile is not instructor")
+
+
 # @receiver(post_save, sender=Profile)
 # def create_promoter(sender, instance, created, **kwargs):
 #     if instance.is_promoter:
@@ -169,7 +172,7 @@ They will all be automatically created if the is_instructor field of the profile
 """
 class InstructorResume(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
-    degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, null=False)
+    degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, default='None')
     major = models.CharField(max_length=344)
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')
@@ -193,9 +196,12 @@ class InstructorResume(models.Model):
     def submit(self):
         self.status = 'submitted'
         self.profile.instructor_application_status = 'submitted'
-        self.profile.save()
         self.save()
+        self.profile.save()
         print("Application submitted..")
+
+    def __str__(self):
+        return self.id
 
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
@@ -225,9 +231,8 @@ class InstructorReport(models.Model):
             self.rating = new_rating
         elif self.rates != 0:
             self.rates += 1
-            self.rating = (self.rating + new_rating) / 2
+        self.rating = (self.rating + new_rating) / 2
         return self.rating
 
     def add_student(self):
         self.number_of_students += 1
-        print("Instructor has got a new student in InstructorReport model..")

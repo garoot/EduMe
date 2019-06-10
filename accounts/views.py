@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, UserRegistrationForm, InstructorResumeForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,13 +8,10 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-
 User = get_user_model()
-
 
 def index(request):
     return render(request, 'EduMe/index.html')
-
     """
     the function list_applications():
     - lists all applications with 'submitted' status
@@ -55,16 +51,17 @@ def display_application(request, oid):
 @login_required
 def process_application(request, approved, oid):
     try:
-        application = get_object_or_404(InstructorResume, pk=oid)
+        application = InstructorResume.objects.get(pk=oid)
     except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned! 1")
 
-    if approved == '1':
-        print("in approved...")
-        application.approve()
+    if request.method == 'POST':
+        if approved == '1':
+            print("in approved...")
+            application.approve()
 
-    elif approved == '0':
-        application.reject()
+        elif approved == '0':
+            application.reject()
     """
     if approved:
         - change is_instructor to True
@@ -78,7 +75,7 @@ def process_application(request, approved, oid):
     return render(request, 'accounts/applications_list.html', {'applications':applications})
 
 @login_required
-def instructor_application(request):
+def instructor_application(request, application_form=None, oid=None):
     instructor_profile = request.user.profile
     if request.method == 'POST':
         """
@@ -87,12 +84,23 @@ def instructor_application(request):
         1- create a new instructor application model
         2- link it to the instructor profile
         """
-        application = InstructorResume.objects.create(profile=instructor_profile)
+
+        if (application_form != None) and (oid != None):
+            try:
+                application = InstructorResume.objects.get(pk=oid)
+            except InstructorResume.MultipleObjectsReturned:
+                print("Exception ERROR: multiple objects returned! 1")
+            """
+            no need to redefine application_form here since it's passed as argument
+            """
+            # application_form = InstructorResumeForm(instance=application,data=request.POST)
+
+        else:
+            application = InstructorResume.objects.filter(profile=instructor_profile).first()
+            application_form = InstructorResumeForm(instance=application,data=request.POST)
         """
         3- give it as an instance below
         """
-        application_form = InstructorResumeForm(instance=application,data=request.POST)
-
         if application_form.is_valid():
             """
             this submit() method will save the form and change
@@ -100,13 +108,14 @@ def instructor_application(request):
             to 'submitted'
             """
             application.submit()
-            messages.success(request, 'Successfully submitted')
-        else:
-            messages.error(request, 'error submitting application')
-        return HttpResponseRedirect(reverse("accounts:instructor_application"))
+        #     messages.success(request, 'Successfully submitted')
+        # else:
+        #     messages.error(request, 'error submitting application')
 
+        # return HttpResponseRedirect(reverse("accounts:instructor_application"))
     else:
         application_form = InstructorResumeForm()
+
     return render(request, 'accounts/instructor_application.html', {'form':application_form})
 
 @login_required
@@ -173,4 +182,4 @@ def user_login(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    return redirect('accounts:login')
