@@ -94,6 +94,8 @@ def create_student(sender, instance, created, **kwargs):
                 InstructorResume.objects.all().filter(profile = instance).first()
             except InstructorResume.MultipleObjectsReturned:
                 print("Exception ERROR: multiple objects returned! 5")
+        # else:
+        #     InstructorResume.objects.create(profile = instance)
 
     else:
         print("is_student is False, change the field to True")

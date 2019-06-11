@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.messages.storage.fallback import FallbackStorage
 from accounts.views import *
 from accounts.models import User, Profile, InstructorResume
-from accounts.forms import  InstructorResumeForm
+from accounts.forms import  InstructorResumeForm, LoginForm
+from django.test import Client
 
 import pytest
 
@@ -22,23 +23,40 @@ class TestViews(TestCase):
         cls.profile = profile
         cls.resume = mixer.blend(InstructorResume, profile=cls.user.profile, status='None')
         cls.application_form = InstructorResumeForm(data={'degree':'D', 'major':'Biology', 'experience':'Bachelor\'s degree'})
+        cls.registration_form = UserRegistrationForm(data={'username':'test', 'first_name':'first', 'last_name':'last',
+                                'email':'test@test.com', 'password':'123321', 'password2':'123321'})
+        cls.login_form = LoginForm(data={'username':'test', 'password':'123321'})
 
     def test_user_login(self):
         path = reverse('accounts:login')
         request = self.factory.get(path) #cls.factory
         request.user = self.user #cls.user
+        login_form = self.login_form
 
+        request.method = 'GET'
         response = user_login(request)
         assert response.status_code == 200
 
-    # def test_user_logout(self):
-    #     path = reverse('accounts:logout')
-    #     request = RequestFactory().get(path)
-    #     request.user = mixer.blend(User)
-    #
-    #     login(request, request.user)
-    #     response = user_logout(request)
-    #     assert response.status_code == 200
+        request.method = 'POST'
+        response = user_login(request, login_form)
+        assert response.status_code == 200
+
+        request.method = 'POST'
+        response = user_login(request)
+        assert response.status_code == 200
+
+    def test_user_logout(self):
+        path = reverse('accounts:logout')
+        request = RequestFactory().get(path)
+        request.user = User.objects.create_user(username='test')
+        request.user.set_password('123321')
+        request.user.save()
+        c = Client()
+
+
+        logged_in = c.login(username='test', password='123321')
+        response = user_logout(request, c)
+        assert response.status_code == 302
 
     def test_register(self):
         path = reverse('accounts:register')
@@ -52,6 +70,15 @@ class TestViews(TestCase):
         """
         pass UserRegistrationForm and test POST
         """
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        request.method = 'POST'
+        registration_form = self.registration_form
+        response = register(request, registration_form)
+        assert response.status_code == 302
+
 
     def test_dashboard(self):
         path = reverse('accounts:dashboard')

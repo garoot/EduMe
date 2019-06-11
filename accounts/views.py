@@ -130,37 +130,45 @@ def edit_profile(request):
         else:
             print("form is invalid")
     else:
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        profile_form = ProfileUpdateForm(instance=current_profile)
     return render(request, 'accounts/edit_profile.html', {'form': profile_form})
-
 
 @login_required
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
 
-def register(request):
+def register(request, registration_form=None):
     if request.method == 'POST':
-        register_form = UserRegistrationForm(request.POST)
-        if register_form.is_valid():
+
+        if registration_form == None:
+            registration_form = UserRegistrationForm(request.POST)
+        else:
+            registration_form = registration_form
+
+        if registration_form.is_valid():
             # Create a new user but don't save it yet until we hash the password
-            new_user = register_form.save(commit=False)
+            new_user = registration_form.save(commit=False)
             # Hashing the password
-            new_user.set_password(register_form.cleaned_data['password'])
+            new_user.set_password(registration_form.cleaned_data['password'])
             new_user.save()
             # Profile.objects.get_or_create(user=request.user)
 
-            return redirect('accounts:login')
+        messages.error(request, 'error submitting application')
+        return HttpResponseRedirect(reverse('accounts:login'))
 
     else:
-        register_form = UserRegistrationForm()
+        registration_form = UserRegistrationForm()
 
-    return render(request, 'accounts/register.html', {'form':register_form})
+    return render(request, 'accounts/register.html', {'form':registration_form})
 
-def user_login(request):
+def user_login(request, login_form=None):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            temp = form.cleaned_data
+        if login_form == None:
+            login_form = LoginForm(request.POST)
+        else:
+            login_form = login_form
+        if login_form.is_valid():
+            temp = login_form.cleaned_data
             user = authenticate(username=temp['username'], password=temp['password'])
             if user is not None:
                 if user.is_active:
@@ -176,13 +184,16 @@ def user_login(request):
             else:
                 return HttpResponse('Invalid Login')
         else:
-            form = LoginForm()
-            return render(request, 'accounts/login.html', {'form': form})
+            login_form = LoginForm()
+            return render(request, 'accounts/login.html', {'form': login_form})
     else:
-        form = LoginForm()
-        return render(request, 'accounts/login.html', {'form':form})
+        login_form = LoginForm()
+        return render(request, 'accounts/login.html', {'form':login_form})
 
 @login_required
-def user_logout(request):
-    logout(request)
+def user_logout(request, client=None):
+    if client != None:
+        logout(client)
+    else:
+        logout(request)
     return redirect('accounts:login')
