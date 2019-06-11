@@ -17,7 +17,8 @@ class TestViews(TestCase):
         super(TestViews, cls).setUpClass()
         cls.factory = RequestFactory()
         cls.user = mixer.blend(User)
-        profile = mixer.blend(Profile, user=cls.user, instructor_application_status='None')
+        profile = cls.user.profile
+        # profile = mixer.blend(Profile, user=cls.user, instructor_application_status='None')
         cls.profile = profile
         cls.resume = mixer.blend(InstructorResume, profile=cls.user.profile, status='None')
         cls.application_form = InstructorResumeForm(data={'degree':'D', 'major':'Biology', 'experience':'Bachelor\'s degree'})
@@ -113,7 +114,12 @@ class TestViews(TestCase):
         request.user.refresh_from_db()
         assert application.status == 'submitted'
         assert request.user.profile.instructor_application_status == 'submitted'
-        assert response.status_code == 200
+        assert response.status_code == 302
+
+        request.method = 'POST'
+        response = instructor_application(request)
+        assert response.status_code == 302
+
 
     def test_approve_application(self):
         application = self.resume

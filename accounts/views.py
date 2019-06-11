@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import InstructorResume, Profile
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, authenticate, logout
 from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -55,13 +56,12 @@ def process_application(request, approved, oid):
     except InstructorResume.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned! 1")
 
-    if request.method == 'POST':
-        if approved == '1':
-            print("in approved...")
-            application.approve()
+    if approved == '1':
+        print("in approved...")
+        application.approve()
 
-        elif approved == '0':
-            application.reject()
+    elif approved == '0':
+        application.reject()
     """
     if approved:
         - change is_instructor to True
@@ -93,10 +93,11 @@ def instructor_application(request, application_form=None, oid=None):
             """
             no need to redefine application_form here since it's passed as argument
             """
+            application_form = application_form
             # application_form = InstructorResumeForm(instance=application,data=request.POST)
 
         else:
-            application = InstructorResume.objects.filter(profile=instructor_profile).first()
+            application = InstructorResume.objects.create(profile=instructor_profile)
             application_form = InstructorResumeForm(instance=application,data=request.POST)
         """
         3- give it as an instance below
@@ -107,13 +108,14 @@ def instructor_application(request, application_form=None, oid=None):
             the profile.instructor_application_status and application.status
             to 'submitted'
             """
+            print("application_form is valid...being submitted")
             application.submit()
         #     messages.success(request, 'Successfully submitted')
-        # else:
-        #     messages.error(request, 'error submitting application')
+        else:
+            messages.error(request, 'error submitting application')
 
-        # return HttpResponseRedirect(reverse("accounts:instructor_application"))
-    else:
+        return HttpResponseRedirect(reverse("accounts:instructor_application"))
+    elif instructor_profile.instructor_application_status != 'submitted':
         application_form = InstructorResumeForm()
 
     return render(request, 'accounts/instructor_application.html', {'form':application_form})
@@ -145,6 +147,7 @@ def register(request):
             # Hashing the password
             new_user.set_password(register_form.cleaned_data['password'])
             new_user.save()
+            # Profile.objects.get_or_create(user=request.user)
 
             return redirect('accounts:login')
 

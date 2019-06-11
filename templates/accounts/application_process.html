@@ -4,6 +4,8 @@
 {% block body_block %}
 <div class="jumbotron">
   <h1>  </h1>
+  
+<form method="post">
 
   {% if user.is_superuser %}
     <h2>Instructor Name: {{ application.profile.user.first_name }}</h2>
@@ -17,8 +19,9 @@
   <div >
     <a href="{% url 'accounts:process_application' approved=0 oid=application.id %}">Reject</a>
     <a href="{% url 'accounts:process_application' approved=1 oid=application.id %}">Approve</a>
-
   </div>
+</form>
+
 
   {% if request.GET.next %}
     <input type="hidden" name="next" value="{{ request.GET.next }}">

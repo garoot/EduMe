@@ -25,9 +25,9 @@ APPLICATION_STATUS=(
     ('rejected', 'Rejected')
 )
 
-# @receiver(post_save, sender=User)
-# def create_profile(sender, instance, created, **kwargs):
-#         Profile.objects.get_or_create(user=instance)
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+        Profile.objects.get_or_create(user=instance)
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name = 'profile')
@@ -94,8 +94,6 @@ def create_student(sender, instance, created, **kwargs):
                 InstructorResume.objects.all().filter(profile = instance).first()
             except InstructorResume.MultipleObjectsReturned:
                 print("Exception ERROR: multiple objects returned! 5")
-        else:
-            InstructorResume.objects.create(profile = instance)
 
     else:
         print("is_student is False, change the field to True")
@@ -201,7 +199,7 @@ class InstructorResume(models.Model):
         print("Application submitted..")
 
     def __str__(self):
-        return self.id
+        return self.profile.user.username
 
 class InstructorBankingInfo(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
