@@ -56,7 +56,7 @@ class Course(models.Model):
     instructor_course_list = models.ForeignKey('accounts.InstructorCoursesList', on_delete=models.SET_NULL, related_name="courses", null=True)
     course_name = models.CharField(max_length=255, verbose_name='Name of the Course')
     course_topic = models.CharField(max_length=255)
-    course_price = models.FloatField()
+    course_price = models.FloatField(null=True)
     course_title = models.CharField(max_length=255)
     course_outline = models.TextField()
     course_requirements = models.TextField()
@@ -78,6 +78,9 @@ class Course(models.Model):
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.course_name
+
 class CourseSection(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections", null=True)
     section_num = models.IntegerField(null=True)
@@ -85,8 +88,8 @@ class CourseSection(models.Model):
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
-
-
+    def __str__(self):
+        return self.section_name
 # class Content(models.Model):
 #     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
 #     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE , limit_choices_to={'model__in':('File', 'Video', 'Image')})
@@ -130,17 +133,34 @@ class Order(models.Model):
     """
     total_amount = models.FloatField(blank=True)
 
-
 class CourseReport(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="reports")
-    course_rating = models.FloatField(blank=True)
-    num_visitors = models.IntegerField(blank=True)
-    num_buyers = models.IntegerField(blank=True)
-    course_revenue = models.FloatField(blank=True)
+    rating = models.FloatField(default=0)
+    num_visitors = models.IntegerField(default=0)
+    num_buyers = models.IntegerField(default=0)
+    course_revenue = models.FloatField(default=0)
     """
     the course report is linked to the instructor's report instantly
     """
     instructor_report = models.ForeignKey('accounts.InstructorReport', on_delete=models.SET_NULL, related_name="course_report", null=True)
+
+    def add_rating(self, new_rating):
+        if self.num_buyers == 0:
+            self.num_buyers += 1
+            self.rating = new_rating
+        elif self.num_buyers != 0:
+            self.num_buyers += 1
+        self.rating = (self.rating + new_rating) / 2
+        return self.rating
+
+    def update_revenue(self, purchase_amount):
+        pass
+
+    def update_num_buyers(self):
+        self.num_buyers += 1
+
+    def update_num_visitors(self):
+        self.num_visitors += 1
 
 """
 When the user adds a course to the order list, OrderItem is created

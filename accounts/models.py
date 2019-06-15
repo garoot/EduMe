@@ -236,3 +236,6 @@ class InstructorReport(models.Model):
 
     def add_student(self):
         self.number_of_students += 1
+
+    def update_revenue(self, purchase_amount):
+        pass
