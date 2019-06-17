@@ -44,10 +44,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
+"""
+must change attribute 'subcategory' to 'name'
+"""
 class Subcategory(models.Model):
     category=models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
-    subcategory=models.CharField(max_length=255, primary_key=True, unique=True)
+    subcategory=models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.subcategory

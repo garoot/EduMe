@@ -10,6 +10,7 @@ from django.test import Client
 
 import pytest
 
+
 @pytest.mark.django_db
 class TestViews(TestCase):
 
@@ -26,6 +27,20 @@ class TestViews(TestCase):
         cls.registration_form = UserRegistrationForm(data={'username':'test', 'first_name':'first', 'last_name':'last',
                                 'email':'test@test.com', 'password':'123321', 'password2':'123321'})
         cls.login_form = LoginForm(data={'username':'test', 'password':'123321'})
+
+    @classmethod
+    def tearDownClass(cls):
+        # cls.user.destroy()
+        # cls.profile.destroy()
+        # cls.resume.destroy()
+        # cls.application_form.destroy()
+        # cls.registration_form.destroy()
+        # cls.login_form.destroy()
+        del cls.user
+        del cls.profile
+        del cls.resume
+        del cls.application_form
+        del cls.registration_form
 
     def test_user_login(self):
         path = reverse('accounts:login')

@@ -25,21 +25,21 @@ def display_course_page(request, course_id):
 
     return render(request, 'courses/contents/course_page.html', {'course':course})
 
-def display_catalog(request, category=None, subcategory=None, type=None):
+def display_catalog(request, category_id=None, subcategory=None, type=None):
     category_obj = None
-    print("Category: {}".format(category))
-    if category==None :
+    print("Category: {}".format(category_id))
+    if category_id==None :
         try:
             courses = Course.objects.all()
         except Course.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
         subcategory = None
 
-    if category:
+    if category_id:
         print("Passed category condition")
 
         try:
-            category_obj = Category.objects.filter(id=category)[0]
+            category_obj = Category.objects.filter(id=category_id)[0]
             print("Category: {}".format(category_obj.name))
         except Category.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
@@ -129,7 +129,7 @@ def edit_content(request, content_id):
 #         return apps.get_model(app_label='courses', model_name=model_name)
 #     return None
 @login_required
-def edit_section(request, section_id):
+def edit_section(request, section_id, edit_section_form=None, test_save=None, test_delete=None):
     print("section id: {}".format(section_id))
     try:
         # section = CourseSection.objects.filter(id=section_id).first()
@@ -146,13 +146,16 @@ def edit_section(request, section_id):
         print("Exception ERROR: multiple objects returned")
 
     if request.method == 'POST':
-        edit_section_form = CourseSectionForm(instance=section, data=request.POST)
-        if 'save' in request.POST:
+
+        if edit_section_form ==None:
+            edit_section_form = CourseSectionForm(instance=section, data=request.POST)
+
+        if ('save' in request.POST) or test_save:
             if edit_section_form.is_valid():
                 edit_section_form.save()
                 return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
 
-        elif 'delete' in request.POST:
+        elif ('delete' in request.POST) or test_delete:
             section.delete()
             return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
 
@@ -185,14 +188,17 @@ def get_content_formsets(instance):
 
 
 @login_required
-def create_section(request, course_id):
+def create_section(request, course_id, section_form=None):
     try:
         course = Course.objects.filter(id=course_id).first()
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
     if request.method == 'POST':
-        section_form =  CourseSectionForm(data=request.POST, files=request.FILES)
+
+        if section_form == None:
+            section_form =  CourseSectionForm(data=request.POST, files=request.FILES)
+
         if section_form.is_valid():
             section = section_form.save(commit=False)
             section.course = course
@@ -253,17 +259,20 @@ def list_courses(request):
     return render(request, 'courses/courses_list.html', {'courses':courses})
 
 @login_required
-def create_course(request):
+def create_course(request, new_course_form=None):
     profile=request.user.profile
     # profile = Profile(user=request.user)
     course_list = InstructorCoursesList.objects.filter(profile=profile).first()
     # Must save it first before assign it
     # course_list.save()
-    course = Course(instructor_course_list=course_list)
+    course = Course.objects.create(instructor_course_list=course_list)
     # section_formset = CourseSectionFormSet(instance=course)
 
     if request.method == 'POST':
-        new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+
+        if new_course_form==None:
+            new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+
         if new_course_form.is_valid():
             new_course_form.save()
             print("Created course..")
@@ -273,6 +282,5 @@ def create_course(request):
         else:
             messages.error(request, 'error creating the course')
     else:
-        print("here...")
         new_course_form = CourseInfoForm()
     return render(request, 'courses/create_course.html', {'new_course_form':new_course_form})

@@ -17,7 +17,7 @@
 
       {% for c in categories %}
       <div>
-        <li><a href="{% url 'courses:display_catalog_category' category=c.id  %}">{{c.name}}</a></li>
+        <li><a href="{% url 'courses:display_catalog_category' category_id=c.id  %}">{{c.name}}</a></li>
       </div>
       {% endfor %}
 
