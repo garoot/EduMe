@@ -115,7 +115,7 @@ def instructor_application(request, application_form=None, oid=None):
             messages.error(request, 'error submitting application')
 
         return HttpResponseRedirect(reverse("accounts:instructor_application"))
-    elif instructor_profile.instructor_application_status != 'submitted':
+    else:
         application_form = InstructorResumeForm()
 
     return render(request, 'accounts/instructor_application.html', {'form':application_form})

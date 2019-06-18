@@ -17,11 +17,11 @@ def index(request):
     return render(request, 'EduMe/index.html')
 
 def display_course_page(request, course_id):
-    try:
-        course = Course.objects.filter(id=course_id)[0]
+    # try:
+    course = Course.objects.get(pk=course_id)
 
-    except Course.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+    # except Course.MultipleObjectsReturned:
+    #     print("Exception ERROR: multiple objects returned!")
 
     return render(request, 'courses/contents/course_page.html', {'course':course})
 
@@ -38,11 +38,11 @@ def display_catalog(request, category_id=None, subcategory=None, type=None):
     if category_id:
         print("Passed category condition")
 
-        try:
-            category_obj = Category.objects.filter(id=category_id)[0]
-            print("Category: {}".format(category_obj.name))
-        except Category.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned!")
+        # try:
+        category_obj = Category.objects.get(pk=category_id)
+        #     print("Category: {}".format(category_obj.name))
+        # except Category.MultipleObjectsReturned:
+        #     print("Exception ERROR: multiple objects returned!")
 
         try:
             courses = Course.objects.filter(course_category=category_obj)
@@ -73,21 +73,25 @@ def display_catalog(request, category_id=None, subcategory=None, type=None):
     return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories, 'category':category_obj})
 
 @login_required
-def create_content(request, section_id):
+def create_content(request, section_id, content_formset=None):
     # content_model = get_model(model_name)
-    try:
-        section = CourseSection.objects.filter(id=section_id).first()
+    # try:
+    section = CourseSection.objects.get(pk=section_id)
 
-    except CourseSection.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+    # except CourseSection.MultipleObjectsReturned:
+    #     print("Exception ERROR: multiple objects returned!")
 
     if request.method == 'POST':
-        content_formset = ContentFormSet(
-                                instance = section,
-                                data=request.POST,
-                                files=request.FILES)
+        if content_formset == None:
+            content_formset = ContentFormSet(
+                                    instance = section,
+                                    data=request.POST,
+                                    files=request.FILES)
         if content_formset.is_valid():
-            content_formset.save()
+
+            saved_content = content_formset.save(commit=False)
+            saved_content.course_section = section
+            saved_content.save()
             # section_formset = CourseSectionFormSet(instance=course)
         else:
             messages.error(request, 'error creating the content')
@@ -96,26 +100,30 @@ def create_content(request, section_id):
     return render(request, 'courses/create_content.html', {'content_formset':content_formset, 'section':section})
 
 @login_required
-def edit_content(request, content_id):
-    try:
-        content = ContentItem.objects.filter(id=content_id)[0]
-    except ContentItem.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+def edit_content(request, content_id, edit_content_form=None, test_save=None, test_delete=None):
+    # try:
+    content = ContentItem.objects.get(pk=content_id)
+    # except ContentItem.MultipleObjectsReturned:
+    #     print("Exception ERROR: multiple objects returned!")
 
     section_id = content.course_section.id
-    section = CourseSection.objects.filter(id=section_id).first()
+    section = CourseSection.objects.get(pk=section_id)
 
     if request.method == 'POST':
-        edit_content_form = ContentForm(instance=content, data=request.POST, files=request.FILES)
+        if edit_content_form ==None:
+            edit_content_form = ContentForm(instance=content, data=request.POST, files=request.FILES)
 
-        if 'save' in request.POST:
+        if ('save' in request.POST) or test_save:
             if edit_content_form.is_valid():
-                edit_content_form.save()
-                return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+                edited_content = edit_content_form.save(commit=False)
+                edited_content.course_section = section
+                edited_content.save()
 
-        elif 'delete' in request.POST:
+                return HttpResponseRedirect(reverse("courses:edit_section", args=[section_id]))
+
+        elif ('delete' in request.POST) or test_delete:
             content.delete()
-            return HttpResponseRedirect(reverse("courses:edit_section", args=[section.id]))
+            return HttpResponseRedirect(reverse("courses:edit_section", args=[section_id]))
 
         else:
             messages.error(request, 'error updating the content')
@@ -131,14 +139,14 @@ def edit_content(request, content_id):
 @login_required
 def edit_section(request, section_id, edit_section_form=None, test_save=None, test_delete=None):
     print("section id: {}".format(section_id))
-    try:
+    # try:
         # section = CourseSection.objects.filter(id=section_id).first()
-        section = CourseSection.objects.get(pk=section_id)
-    except CourseSection.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+    section = CourseSection.objects.get(pk=section_id)
+    # except CourseSection.MultipleObjectsReturned:
+    #     print("Exception ERROR: multiple objects returned!")
 
     course_id = section.course.id
-    course= Course.objects.filter(id=course_id).first()
+    course= Course.objects.get(pk=course_id)
 
     try:
         contents = ContentItem.objects.all().filter(course_section=section)
@@ -190,7 +198,7 @@ def get_content_formsets(instance):
 @login_required
 def create_section(request, course_id, section_form=None):
     try:
-        course = Course.objects.filter(id=course_id).first()
+        course = Course.objects.get(pk=course_id)
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
@@ -215,9 +223,9 @@ def create_section(request, course_id, section_form=None):
 
 
 @login_required
-def edit_course(request, oid):
+def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete=None):
     try:
-        course = Course.objects.filter(id=oid).first()
+        course = Course.objects.get(pk=oid)
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
@@ -232,12 +240,16 @@ def edit_course(request, oid):
             net_sections.append(section)
 
     if request.method == 'POST':
-        edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
-        if 'save' in request.POST:
+
+        if edit_course_form == None:
+            edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+
+        if ('save' in request.POST) or test_save:
             if edit_course_form.is_valid():
                 edit_course_form.save()
                 return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
-        elif 'delete' in request.POST:
+
+        elif ('delete' in request.POST) or test_delete:
             course.delete()
             next = request.POST.get('next','/')
             return HttpResponseRedirect(reverse('courses:list_courses'))

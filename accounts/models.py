@@ -64,7 +64,7 @@ class Profile(models.Model):
     2- instructor_application_status = 'None'
     """
     def show_instructor_application(self):
-        if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'none':
+        if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'None':
             return True
         elif self.instructor_application_status == 'submitted':
             return False

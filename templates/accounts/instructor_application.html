@@ -4,7 +4,7 @@
 {% block body_block %}
 <div class="jumbotron">
   <h1>Instructor Application</h1>
-  {% if user.profile.show_instructor_application %}
+  {% if request.user.profile.show_instructor_application %}
     <form method="POST">
       {{form.as_p}}
       {% csrf_token %}
