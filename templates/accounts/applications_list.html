@@ -7,7 +7,7 @@
 
   {% if user.is_superuser %}
     {% for application in applications %}
-    <li> <a href="{% url "accounts:display_application" oid=application.id %}">{{application.profile.user.first_name}} {{application.profile.user.last_name}}</a> </li>
+    <li> <a href="{% url "accounts:display_application" oid=application.id %}">{{application.profile}} ({{application.major}})</a> </li>
     {% endfor %}
   {% endif %}
 

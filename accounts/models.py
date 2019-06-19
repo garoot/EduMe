@@ -55,7 +55,7 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='users/%Y/%m/%d', null=True, blank=True)
 
     def __str__(self):
-        return 'Profile of the user {}'.format(self.user.username)
+        return self.user.username
 
     """
     this function return true if the application should show up to a user or not

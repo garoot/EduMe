@@ -221,6 +221,16 @@ def create_section(request, course_id, section_form=None):
     section_form = CourseSectionForm()
     return render(request, 'courses/create_section.html', {'section_form':section_form, 'course':course})
 
+@login_required
+def list_courses(request):
+    profile=request.user.profile
+    course_list = InstructorCoursesList.objects.filter(profile=profile).first()
+
+    try:
+        courses = Course.objects.all().filter(instructor_course_list=course_list)
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
+    return render(request, 'courses/courses_list.html', {'courses':courses})
 
 @login_required
 def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete=None):
@@ -258,17 +268,6 @@ def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete
     else:
         edit_course_form = CourseInfoForm(instance=course)
     return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form, 'course':course, 'sections':net_sections})
-
-@login_required
-def list_courses(request):
-    profile=request.user.profile
-    course_list = InstructorCoursesList.objects.filter(profile=profile).first()
-
-    try:
-        courses = Course.objects.all().filter(instructor_course_list=course_list)
-    except Course.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned")
-    return render(request, 'courses/courses_list.html', {'courses':courses})
 
 @login_required
 def create_course(request, new_course_form=None):

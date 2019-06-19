@@ -7,6 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils import timezone
 from django.apps import apps
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 CATEGORIES =(
@@ -43,7 +45,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
 """
 must change attribute 'subcategory' to 'name'
 """
@@ -92,11 +93,6 @@ class CourseSection(models.Model):
 
     def __str__(self):
         return self.section_name
-# class Content(models.Model):
-#     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="contents")
-#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE , limit_choices_to={'model__in':('File', 'Video', 'Image')})
-#     object_id = models.PositiveIntegerField()
-#     item = GenericForeignKey('content_type', 'object_id')
 
 class ContentItem(models.Model):
     course_section = models.ForeignKey(CourseSection, on_delete=models.CASCADE, related_name="files")
