@@ -276,10 +276,10 @@ def create_course(request, new_course_form=None):
     course_list = InstructorCoursesList.objects.filter(profile=profile).first()
     # Must save it first before assign it
     # course_list.save()
-    course = Course.objects.create(instructor_course_list=course_list)
     # section_formset = CourseSectionFormSet(instance=course)
 
     if request.method == 'POST':
+        course = Course.objects.create(instructor_course_list=course_list)
 
         if new_course_form==None:
             new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
