@@ -36,7 +36,10 @@
             <h1>{{course.course_name}}</h1>
             <p class="course-card-price">${{course.course_price}}</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p> <button type="button" name="button">Add to Cart</button> </p>
+            <form class="" method="POST">
+              {% csrf_token %}
+              <p><button type="submit" formaction="{% url 'cart:cart_add' course_id=course.id %}">Add to Cart</button></p>
+            </form>
           </div>
         </div>
 

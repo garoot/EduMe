@@ -86,7 +86,7 @@ class TestModels:
         profile.instructor_application_status = 'rejected'
         assert profile.show_instructor_application() == True
 
-        profile.instructor_application_status = 'none'
+        profile.instructor_application_status = 'None'
         assert profile.show_instructor_application() == True
 
         profile.instructor_application_status = 'submitted'

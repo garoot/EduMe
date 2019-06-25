@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} Cart Details {% endblock %}
+
+{% load static %}
+
+
+{%block body_block %}
+<div class="jumbotron">
+  <h1>Cart Details</h1>
+  <tbody>
+    {% for item in cart %}
+      {% with course=item.course %}
+      <tr>
+        <a href="{% url 'courses:course_page' course_id=course.id  %}">
+          <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:10%">
+        </a>
+        <td>Price: ${{item.price}}</td>
+        <td>{{item.name}}</td>
+        <td><a href="{% url "cart:cart_remove" course.id %}">Remove</a></td>
+      </tr>
+      {% endwith %}
+    {% endfor %}
+  </tbody>
+</div>
+
+
+
+{% endblock %}

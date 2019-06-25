@@ -48,10 +48,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_cleanup.apps.CleanupConfig',
     'accounts',
     'phone_field',
     'courses',
+    'django_cleanup.apps.CleanupConfig',
+    'cart',
+
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
@@ -137,3 +139,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+CART_SESSION_ID = 'cart'
