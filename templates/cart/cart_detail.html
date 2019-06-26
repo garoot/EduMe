@@ -3,26 +3,60 @@
 
 {% load static %}
 
-
 {%block body_block %}
-<div class="jumbotron">
-  <h1>Cart Details</h1>
-  <tbody>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" href="{% static 'css/site.css' %}">
+
+<div class="container">
+  <table id='cart' class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th style="width:50%">Course</th>
+        <th style="width:10%">Price</th>
+        <th style="width:30%">Subtotal</th>
+        <th style="width:10%"></th>
+      </tr>
+    </thead>
     {% for item in cart %}
       {% with course=item.course %}
+    <tbody>
       <tr>
-        <a href="{% url 'courses:course_page' course_id=course.id  %}">
-          <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:10%">
-        </a>
-        <td>Price: ${{item.price}}</td>
-        <td>{{item.name}}</td>
-        <td><a href="{% url "cart:cart_remove" course.id %}">Remove</a></td>
+
+        <td data-th="Course">
+          <div class="row">
+            <div class="col-sm-2 hidden-xs">
+              <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:150%" class="img-responsive">
+            </div>
+            <div class="col-sm-10">
+              <h4 class="nomargin">{{item.name}}</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </td>
+
+        <td data-th="Price">SAR {{item.price}}</td>
+        <td data-th="Subtotal">SAR {{item.price}}</td>
+        <td data-th="">
+          <a href="{% url "cart:cart_remove" course.id %}">
+            <button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+          </a>
+        </td>
       </tr>
+    </tbody>
+    <tfoot>
+      <tr class="visible-xs">
+        <td class="text-center"><strong>SAR {{cart.get_total_price}}</strong> </td>
+      </tr>
+
+      <tr>
+        <td><a href="#" class="btn btn-warning"><i class="fa fa-angle-left"></i>Continue Shopping</a></td>
+        <td colspan="2" class="hidden-xs"></td>
+        <td class="hidden-xs text-center"><strong>Total: SAR {{cart.get_total_price}}</strong> </td>
+        <td><a href="#" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i> </a> </td>
+      </tr>
+    </tfoot>
       {% endwith %}
     {% endfor %}
-  </tbody>
-</div>
-
+  </table>
 
 
 {% endblock %}
