@@ -42,9 +42,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.contenttypes',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -53,11 +53,25 @@ INSTALLED_APPS = [
     'courses',
     'django_cleanup.apps.CleanupConfig',
     'cart',
+    'search',
+    'django_elasticsearch_dsl',
 
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE':'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'elasticsearch:9200',
+        'INDEX_NAME': 'haystack'
+    }
+}
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -97,6 +111,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
     }
 }
 

@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
 from courses import views
+from search import views as search_views
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^courses/', include('courses.urls', namespace='courses')),
     url(r'^cart/', include('cart.urls', namespace='cart')),
+    url(r'^search/', search_views.search, name='search_course'),
+    url(r'^search_course/', search_views.search_course, name='search_course'),
     url(r'^$', views.index, name = 'index'),
 ]
 
