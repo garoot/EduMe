@@ -60,7 +60,10 @@
         <td><a href="{% url 'courses:display_catalog' %}" class="btn btn-warning"><i class="fa fa-angle-left"></i>Continue Shopping</a></td>
         <td colspan="2" class="hidden-xs"></td>
         <td class="hidden-xs text-center"><strong>Total: <br>SAR {{cart.get_total_price}}</strong> </td>
-        <td><a href="#" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i> </a> </td>
+      <form method="POST">
+        <td><a href="{% url 'cart:create_order' %}" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i> </a> </td>
+      </form>
+
       </tr>
     </tfoot>
   </table>

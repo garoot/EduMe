@@ -28,6 +28,7 @@ STATICFILES_DIRS = (
 SECRET_KEY = '%4jf)u%dd&6gz2wm-mts)-qy-8x1j9)9m3#w_46&eif@0w=ya&'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
@@ -54,7 +55,9 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'cart',
     'search',
+    'payment',
     'django_elasticsearch_dsl',
+    'paypal.standard.ipn',
 
 ]
 
@@ -156,3 +159,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 CART_SESSION_ID = 'cart'
+
+PAYPAL_RECEIVER_EMAIL = 'majeed.garoot@gmail.com'
+PAYPAL_TEST = True

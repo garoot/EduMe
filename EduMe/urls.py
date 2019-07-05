@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^search/', search_views.search, name='search_course'),
     url(r'^search_course/', search_views.search_course, name='search_course'),
     url(r'^$', views.index, name = 'index'),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
+    url(r'^payment/', include('payment.urls', namespace='payment')),
 ]
 
 """

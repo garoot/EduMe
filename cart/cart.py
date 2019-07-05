@@ -61,6 +61,12 @@ class Cart(object):
             return True
         else:
             return False
+    def print_items(self):
+        for item in self.cart.values():
+            print(item['name'])
+
+    def items_ids(self):
+        return self.cart.keys()
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

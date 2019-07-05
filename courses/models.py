@@ -55,6 +55,7 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.subcategory
 # Create your models here.
+
 class Course(models.Model):
     instructor_course_list = models.ForeignKey('accounts.InstructorCoursesList', on_delete=models.SET_NULL, related_name="courses", null=True)
     course_name = models.CharField(max_length=255, verbose_name='Name of the Course')
@@ -80,6 +81,8 @@ class Course(models.Model):
     course_length = models.FloatField(null=True)
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
+    #if a course is discounted, no promo code can apply to any OrderItem
+    discounted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.course_name
@@ -105,34 +108,8 @@ class ContentItem(models.Model):
     def __str__(self):
         return self.title
 
-# class File(ItemBase):
-#     """
-#     before this line, we must identify the course category because..
-#     ..files will be saved into different folders based on that
-#     """
-#     file = models.FileField(upload_to="")
-# class Video(ItemBase):
-#     file = models.FileField(upload_to="")
-#
-# class Image(ItemBase):
-#     file = models.FileField(upload_to="")
-
-# AKA cart
-class Order(models.Model):
-    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, related_name='order_lists')
-    """
-    - Purchase date is automatically adjusted to "today's date" upon the completion of a purchase
-    - It will be copied to the payment information email
-    - it's not to be adjusted by customers
-    """
-    purchase_date = models.DateTimeField(default=timezone.now, editable=False, blank=True)
-    """
-    - Total amount is instantly updated when a course is added or removed from the list
-    """
-    total_amount = models.FloatField(blank=True)
-
 class CourseReport(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="reports")
+    course = models.OneToOneField(Course, on_delete=models.CASCADE, related_name="report")
     rating = models.FloatField(default=0)
     num_visitors = models.IntegerField(default=0)
     num_buyers = models.IntegerField(default=0)
@@ -152,7 +129,7 @@ class CourseReport(models.Model):
         return self.rating
 
     def update_revenue(self, purchase_amount):
-        pass
+        self.course_revenue += purchase_amount
 
     def update_num_buyers(self):
         self.num_buyers += 1
@@ -160,16 +137,46 @@ class CourseReport(models.Model):
     def update_num_visitors(self):
         self.num_visitors += 1
 
+class PromotionCode(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="promo_codes")
+    code = models.CharField(max_length=10, unique=True, primary_key=True )
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    active = models.BooleanField()
+    uses = models.IntegerField(null=True)
+
+class Order(models.Model):
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, related_name='orders')
+
+    """
+    - Purchase date is automatically adjusted to "today's date" upon the completion of a purchase
+    - It will be copied to the payment information email
+    - it's not to be adjusted by customers
+    """
+    purchase_date = models.DateTimeField(default=timezone.now, editable=False, blank=True)
+    """
+    - Total amount is instantly updated when a course is added or removed from the list
+    """
+    total_amount = models.FloatField(blank=True)
+
+
 """
 When the user adds a course to the order list, OrderItem is created
 """
 class OrderItem(models.Model):
-    order_list = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_items")
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
     """
     - when a course is added to the order list, we check if the promotion code field is valid
-    - Then based on the promotion we adjust the price of the order item
+    - Then based on the promotion we adjust the price in the cart and the order item
     - Then we update the total price of the order
     """
     purchase_price =models.FloatField(blank=True)
-    colurse_report = models.ForeignKey(CourseReport, on_delete=models.SET_NULL, related_name="order_item", null=True)
+    course_report = models.ForeignKey(CourseReport, on_delete=models.SET_NULL, related_name="report_items", null=True)
+
+    def update_purchase_price(discount_amount):
+        self.purchase_price = course.course_price - discount_amount
+
+@receiver(post_save, sender=Course)
+def create_course_report(sender, instance, created, **kwargs):
+        CourseReport.objects.get_or_create(course=instance)
