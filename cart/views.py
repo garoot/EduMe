@@ -119,8 +119,10 @@ This function will be modified later to implement the promotion code feature, fo
 
 7. retrieve order in create_order() using request.session['order_id'] instead of creating new order
 8. remove order_item creation from create_order() since it's already created inside order
+"""
 
-
+"""
+This is to be removed to order Application
 """
 """
 Here, we retrieve order object, which is the receipt and

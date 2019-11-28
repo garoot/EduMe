@@ -8,11 +8,8 @@
     {% if user.profile.is_instructor %}
 
     <form method="POST" enctype='multipart/form-data'>
-      {{content_formset.management_form}}
-      {% for content in content_formset.forms %}
-        {{content.as_p}}
+        {{content_form.as_p}}
         {% csrf_token %}
-      {% endfor %}
       <input type="submit" class="btn btn-primary" value="Save">
     </form>
     {% endif %}

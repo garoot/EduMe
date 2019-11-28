@@ -73,31 +73,37 @@ def display_catalog(request, category_id=None, subcategory=None, type=None):
     return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories, 'category':category_obj})
 
 @login_required
-def create_content(request, section_id, content_formset=None):
+def create_content(request, section_id, content_form=None):
     # content_model = get_model(model_name)
-    # try:
-    section = CourseSection.objects.get(pk=section_id)
+    print("create_content: step 1")
+    try:
+        section = CourseSection.objects.get(pk=section_id)
 
-    # except CourseSection.MultipleObjectsReturned:
-    #     print("Exception ERROR: multiple objects returned!")
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
+
+    print(["got the section id: {}".format(section.id)])
 
     if request.method == 'POST':
-        if content_formset == None:
-            content_formset = ContentFormSet(
-                                    instance = section,
+        if content_form == None:
+            print("content_form is None")
+            content_form = ContentForm(
                                     data=request.POST,
                                     files=request.FILES)
-        if content_formset.is_valid():
-
-            saved_content = content_formset.save(commit=False)
+        if content_form.is_valid():
+            print("Content_formset is valid")
+            saved_content = content_form.save(commit=False)
             saved_content.course_section = section
             saved_content.save()
+            print("content id: {}".format(saved_content.id))
             # section_formset = CourseSectionFormSet(instance=course)
+            return HttpResponseRedirect(reverse("courses:edit_content", args=[saved_content.id]))
+
         else:
             messages.error(request, 'error creating the content')
 
-    content_formset = ContentFormSet(instance=section)
-    return render(request, 'courses/create_content.html', {'content_formset':content_formset, 'section':section})
+    content_form = ContentForm(instance=section)
+    return render(request, 'courses/create_content.html', {'content_form':content_form, 'section':section})
 
 @login_required
 def edit_content(request, content_id, edit_content_form=None, test_save=None, test_delete=None):
