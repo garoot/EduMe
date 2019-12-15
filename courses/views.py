@@ -17,13 +17,29 @@ def index(request):
     return render(request, 'EduMe/index.html')
 
 def display_course_page(request, course_id):
-    # try:
-    course = Course.objects.get(pk=course_id)
+    try:
+        course = Course.objects.get(pk=course_id)
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
 
-    # except Course.MultipleObjectsReturned:
-    #     print("Exception ERROR: multiple objects returned!")
+    try:
+        sections = CourseSection.objects.all().filter(course=course)
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
 
-    return render(request, 'courses/contents/course_page.html', {'course':course})
+    net_contents = []
+    for section in sections:
+        try:
+            contents = ContentItem.objects.all().filter(course_section=section)
+        except CourseSection.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned")
+
+        net_contents.append(contents)
+
+
+
+
+    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':contents})
 
 def display_catalog(request, category_id=None, subcategory=None, type=None):
     category_obj = None
