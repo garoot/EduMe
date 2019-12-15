@@ -8,7 +8,7 @@
     <form method="POST" enctype='multipart/form-data'>
       {{edit_content_form.as_p}}
         {% csrf_token %}
-      <input type="submit" class="btn btn-primary" value="Save">
+      <input type="submit" class="btn btn-primary" name='save' value="Save">
       <input type="submit" class="btn btn-primary" name= 'delete' value="Delete Section">
     </form>
 

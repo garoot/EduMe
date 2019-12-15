@@ -107,10 +107,10 @@ def create_content(request, section_id, content_form=None):
 
 @login_required
 def edit_content(request, content_id, edit_content_form=None, test_save=None, test_delete=None):
-    # try:
-    content = ContentItem.objects.get(pk=content_id)
-    # except ContentItem.MultipleObjectsReturned:
-    #     print("Exception ERROR: multiple objects returned!")
+    try:
+        content = ContentItem.objects.get(pk=content_id)
+    except ContentItem.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
 
     section_id = content.course_section.id
     section = CourseSection.objects.get(pk=section_id)
@@ -121,7 +121,8 @@ def edit_content(request, content_id, edit_content_form=None, test_save=None, te
 
         if ('save' in request.POST) or test_save:
             if edit_content_form.is_valid():
-                edited_content = edit_content_form.save(commit=False)
+                print("it's valid..")
+                edited_content = edit_content_form.save()
                 edited_content.course_section = section
                 edited_content.save()
 
