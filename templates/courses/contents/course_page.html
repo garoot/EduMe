@@ -28,14 +28,14 @@
 <div class="course-content">
   <h2>Contents</h2>
   {% for section in sections %}
-    <h4> {{section.section_name}} </h4>
-    <ul>
-      {% for content in contents %}
-        {% if content.course_section == section%}
-        <a href="#"><li>{{content.title}}</li></a>
-        {% endif %}
-      {% endfor %}
-    </ul>
+    <h4>{{section.section_name}}</h4>
+      <ul>
+        {% for content in contents %}
+          {% if content.course_section == section%}
+          <a href="#"><li>{{content.title}}</li></a>
+          {% endif %}
+        {% endfor %}
+      </ul>
   {% endfor %}
 </div>
 
