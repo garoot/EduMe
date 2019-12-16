@@ -16,16 +16,32 @@ User = get_user_model()
 def index(request):
     return render(request, 'EduMe/index.html')
 
-def display_course_page(request, course_id):
-    try:
-        course = Course.objects.get(pk=course_id)
-    except Course.MultipleObjectsReturned:
-        print("Exception ERROR: multiple objects returned!")
+def display_course_page(request, course_id=None, content_id=None):
+    if (content_id != None):
+        print("If...")
+        try:
+            content_item = ContentItem.objects.get(pk=content_id)
+        except ContentItem.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned")
+        print("path to media file: {}.format(content_item.file.url)")
+
+        section = content_item.course_section
+        course = section.course
+    else:
+        print("Else..")
+        content_item = None
+
+        try:
+            course = Course.objects.get(pk=course_id)
+        except Course.MultipleObjectsReturned:
+            print("Exception ERROR: multiple objects returned!")
 
     try:
         sections = CourseSection.objects.all().filter(course=course)
     except CourseSection.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned")
+
+
 
     net_contents = []
     for section in sections:
@@ -33,13 +49,11 @@ def display_course_page(request, course_id):
             contents = ContentItem.objects.all().filter(course_section=section)
         except CourseSection.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned")
+        #must iterate through contents to get all of them in net_contents
         for content in contents:
             net_contents.append(content)
 
-
-
-
-    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':net_contents})
+    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':net_contents, 'content_item':content_item})
 
 def display_catalog(request, category_id=None, subcategory=None, type=None):
     category_obj = None

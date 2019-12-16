@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^display_catalog/(?P<subcategory>[a-zA-Z0-9_ ]*)/$', views.display_catalog, name='display_catalog_subcategory'),
     url(r'^display_catalog/(?P<type>\w+)/$', views.display_catalog, name='display_catalog_type'),
     url(r'^course_page/(?P<course_id>[0-9]+)/$', views.display_course_page, name='course_page'),
+    url(r'^course_page/(?P<content_id>[0-9]+)/$', views.display_course_page, name='course_page_play'),
 
 ]

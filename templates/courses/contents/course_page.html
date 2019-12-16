@@ -1,7 +1,7 @@
 {% extends "base_catalog.html" %}
 {% load static %}
 <head>
-  <script type="text/javascript"
+  <!-- <script type="text/javascript"
       src="http://ajax.googleapis.com/ajax/libs/
       swfobject/2.2/swfobject.js"></script>
     <script type="text/javascript">
@@ -9,7 +9,7 @@
       var params = {movie:"{{content_item.file.url}}"};
       swfobject.embedSWF("flash/splayer.swf",
       "content", "400", "320", "8.0.0",
-      flashvars, params);</script>
+      flashvars, params);</script> -->
 </head>
 {% block title %} Home Page {% endblock %}
 
@@ -17,7 +17,9 @@
 {% endblock %}
 
 {% block content %}
-
+<video width=600 controls>
+<source src="{{ content_item.video.url }}" type="video/mp4">
+</video>
 <div class="course-card">
     <img src="{% if course.course_picture %}{{course.course_picture.url}} {% endif %}" style="width:100%">
   <h1>{{course.course_name}}</h1>
@@ -32,7 +34,7 @@
       <ul>
         {% for content in contents %}
           {% if content.course_section == section%}
-          <a href="#"><li>{{content.title}}</li></a>
+          <a href="{% url 'courses:course_page_play' content_id=content.id %}"><li>{{content.title}}</li></a>
           {% endif %}
         {% endfor %}
       </ul>
