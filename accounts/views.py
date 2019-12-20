@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import LoginForm, UserRegistrationForm, InstructorResumeForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required

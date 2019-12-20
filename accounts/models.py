@@ -172,7 +172,7 @@ They will all be automatically created if the is_instructor field of the profile
 """
 class InstructorResume(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
-    degree = models.CharField(max_length=2, choices=EDUCATION_DEGREES, default='None')
+    degree = models.CharField(max_length=6, choices=EDUCATION_DEGREES, default='None')
     major = models.CharField(max_length=344)
     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')

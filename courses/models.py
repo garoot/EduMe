@@ -72,7 +72,7 @@ class Course(models.Model):
     course_picture = models.ImageField(upload_to='courses/%Y/%m/%d', null=True)
     course_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="courses", null=True)
     # course_category = models.CharField(max_length=3, choices=CATEGORIES, default="None")
-    course_subcategory = models.CharField(max_length=3, choices=SUBCATEGORIES, default="None")
+    course_subcategory = models.CharField(max_length=6, choices=SUBCATEGORIES, default="None")
 
     # course_subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, related_name="courses", null=True)
     course_type = models.CharField(max_length=25, choices=COURSE_TYPES, default="None")
@@ -107,6 +107,9 @@ class ContentItem(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_id(self):
+        return self.id
 
 class CourseReport(models.Model):
     course = models.OneToOneField(Course, on_delete=models.CASCADE, related_name="report")

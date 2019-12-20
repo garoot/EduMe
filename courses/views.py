@@ -16,44 +16,45 @@ User = get_user_model()
 def index(request):
     return render(request, 'EduMe/index.html')
 
-def display_course_page(request, course_id=None, content_id=None):
-    if (content_id != None):
-        print("If...")
-        try:
-            content_item = ContentItem.objects.get(pk=content_id)
-        except ContentItem.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned")
-        print("path to media file: {}.format(content_item.file.url)")
+def display_content(request, content_id):
 
-        section = content_item.course_section
-        course = section.course
-    else:
-        print("Else..")
-        content_item = None
+    try:
+        content_item = ContentItem.objects.get(pk=content_id)
+    except ContentItem.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
 
-        try:
-            course = Course.objects.get(pk=course_id)
-        except Course.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned!")
+    print("content path:{}".format(content_item.file.url))
+
+    try:
+        contents = ContentItem.objects.all()
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
+
+    section = content_item.course_section
+
+    path = content_item.file.url
+
+    return render(request, 'courses/contents/content.html', {'section':section, 'content':content_item, 'contents':contents, 'path':path})
+
+def display_course_page(request, course_id=None):
+
+    try:
+        course = Course.objects.get(pk=course_id)
+    except Course.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned!")
 
     try:
         sections = CourseSection.objects.all().filter(course=course)
     except CourseSection.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned")
 
+    try:
+        contents = ContentItem.objects.all()
+    except CourseSection.MultipleObjectsReturned:
+        print("Exception ERROR: multiple objects returned")
+    #must iterate through contents to get all of them in net_contents
 
-
-    net_contents = []
-    for section in sections:
-        try:
-            contents = ContentItem.objects.all().filter(course_section=section)
-        except CourseSection.MultipleObjectsReturned:
-            print("Exception ERROR: multiple objects returned")
-        #must iterate through contents to get all of them in net_contents
-        for content in contents:
-            net_contents.append(content)
-
-    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':net_contents, 'content_item':content_item})
+    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':contents})
 
 def display_catalog(request, category_id=None, subcategory=None, type=None):
     category_obj = None

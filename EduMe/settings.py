@@ -14,8 +14,11 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# PROJECT_DIR = os.path.dirname(BASE_DIR)
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+# MEDIA_ROOT = os.path.join(PROJECT_DIR,'churchsite_static_root','media_root')
+
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), 'static').replace('\\','/'),
 )
@@ -54,27 +57,27 @@ INSTALLED_APPS = [
     'courses',
     'django_cleanup.apps.CleanupConfig',
     'cart',
-    'search',
+    # 'search',
     'payment',
-    'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl',
     'paypal.standard.ipn',
 
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'localhost:9200'
-    },
-}
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'localhost:9200'
+#     },
+# }
 
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE':'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'elasticsearch:9200',
-        'INDEX_NAME': 'haystack'
-    }
-}
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE':'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+#         'URL': 'elasticsearch:9200',
+#         'INDEX_NAME': 'haystack'
+#     }
+# }
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -99,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'django.template.context_processors.media',
             ],
         },
     },
