@@ -1,20 +1,22 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import CourseInfoForm,CourseSectionForm, CourseSectionFormSet, ContentFormSet, ContentForm
+from .forms import CourseInfoForm, CourseSectionForm, CourseSectionFormSet, ContentFormSet, ContentForm
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
 from django.contrib import messages
-from accounts.models import InstructorCoursesList, Profile
-from .models import Course, CourseSection, CourseReport, ContentItem, OrderItem, Order, Category, Subcategory
+from accounts.models import Profile
+from .models import Course, CourseSection, CourseReport, ContentItem, Category, Subcategory
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 # Create your views here.
 
+
 def index(request):
     return render(request, 'EduMe/index.html')
+
 
 def display_content(request, content_id):
 
@@ -34,7 +36,8 @@ def display_content(request, content_id):
 
     path = content_item.file.url
 
-    return render(request, 'courses/contents/content.html', {'section':section, 'content':content_item, 'contents':contents, 'path':path})
+    return render(request, 'courses/contents/content.html', {'section': section, 'content': content_item, 'contents': contents, 'path': path})
+
 
 def display_course_page(request, course_id=None):
 
@@ -54,12 +57,13 @@ def display_course_page(request, course_id=None):
         print("Exception ERROR: multiple objects returned")
     #must iterate through contents to get all of them in net_contents
 
-    return render(request, 'courses/contents/course_page.html', {'course':course, 'sections':sections, 'contents':contents})
+    return render(request, 'courses/contents/course_page.html', {'course': course, 'sections': sections, 'contents': contents})
+
 
 def display_catalog(request, category_id=None, subcategory=None, type=None):
     category_obj = None
     print("Category: {}".format(category_id))
-    if category_id==None :
+    if category_id == None:
         try:
             courses = Course.objects.all()
         except Course.MultipleObjectsReturned:
@@ -82,7 +86,8 @@ def display_catalog(request, category_id=None, subcategory=None, type=None):
 
     if subcategory:
         try:
-            subcategory_obj = Subcategory.objects.filter(subcategory=subcategory)[0]
+            subcategory_obj = Subcategory.objects.filter(
+                subcategory=subcategory)[0]
         except Subcategory.MultipleObjectsReturned:
             print("Exception ERROR: multiple objects returned!")
 
@@ -101,7 +106,8 @@ def display_catalog(request, category_id=None, subcategory=None, type=None):
     except Subcategory.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned!")
 
-    return render(request, 'courses/shop/catalog.html', {'courses':courses, 'categories':categories, 'subcategories':subcategories, 'category':category_obj})
+    return render(request, 'courses/shop/catalog.html', {'courses': courses, 'categories': categories, 'subcategories': subcategories, 'category': category_obj})
+
 
 @login_required
 def create_content(request, section_id, content_form=None):
@@ -119,8 +125,8 @@ def create_content(request, section_id, content_form=None):
         if content_form == None:
             print("content_form is None")
             content_form = ContentForm(
-                                    data=request.POST,
-                                    files=request.FILES)
+                data=request.POST,
+                files=request.FILES)
         if content_form.is_valid():
             print("Content_formset is valid")
             saved_content = content_form.save(commit=False)
@@ -134,7 +140,8 @@ def create_content(request, section_id, content_form=None):
             messages.error(request, 'error creating the content')
 
     content_form = ContentForm(instance=section)
-    return render(request, 'courses/create_content.html', {'content_form':content_form, 'section':section})
+    return render(request, 'courses/create_content.html', {'content_form': content_form, 'section': section})
+
 
 @login_required
 def edit_content(request, content_id, edit_content_form=None, test_save=None, test_delete=None):
@@ -147,8 +154,9 @@ def edit_content(request, content_id, edit_content_form=None, test_save=None, te
     section = CourseSection.objects.get(pk=section_id)
 
     if request.method == 'POST':
-        if edit_content_form ==None:
-            edit_content_form = ContentForm(instance=content, data=request.POST, files=request.FILES)
+        if edit_content_form == None:
+            edit_content_form = ContentForm(
+                instance=content, data=request.POST, files=request.FILES)
 
         if ('save' in request.POST) or test_save:
             if edit_content_form.is_valid():
@@ -168,7 +176,7 @@ def edit_content(request, content_id, edit_content_form=None, test_save=None, te
 
     else:
         edit_content_form = ContentForm(instance=content)
-    return render(request, 'courses/edit_content.html', {'edit_content_form':edit_content_form ,'content':content})
+    return render(request, 'courses/edit_content.html', {'edit_content_form': edit_content_form, 'content': content})
 
 # def get_model(model_name):
 #     if model_name in ['image', 'video', 'file']:
@@ -178,13 +186,13 @@ def edit_content(request, content_id, edit_content_form=None, test_save=None, te
 def edit_section(request, section_id, edit_section_form=None, test_save=None, test_delete=None):
     print("section id: {}".format(section_id))
     # try:
-        # section = CourseSection.objects.filter(id=section_id).first()
+    # section = CourseSection.objects.filter(id=section_id).first()
     section = CourseSection.objects.get(pk=section_id)
     # except CourseSection.MultipleObjectsReturned:
     #     print("Exception ERROR: multiple objects returned!")
 
     course_id = section.course.id
-    course= Course.objects.get(pk=course_id)
+    course = Course.objects.get(pk=course_id)
 
     try:
         contents = ContentItem.objects.all().filter(course_section=section)
@@ -193,8 +201,9 @@ def edit_section(request, section_id, edit_section_form=None, test_save=None, te
 
     if request.method == 'POST':
 
-        if edit_section_form ==None:
-            edit_section_form = CourseSectionForm(instance=section, data=request.POST)
+        if edit_section_form == None:
+            edit_section_form = CourseSectionForm(
+                instance=section, data=request.POST)
 
         if ('save' in request.POST) or test_save:
             if edit_section_form.is_valid():
@@ -205,19 +214,19 @@ def edit_section(request, section_id, edit_section_form=None, test_save=None, te
             section.delete()
             return HttpResponseRedirect(reverse("courses:edit_course", args=[course.id]))
 
-
         else:
             messages.error(request, 'error updating the section info')
 
     else:
         edit_section_form = CourseSectionForm(instance=section)
-    return render(request, 'courses/edit_section.html', {'edit_section_form':edit_section_form, 'section':section, 'contents':contents})
+    return render(request, 'courses/edit_section.html', {'edit_section_form': edit_section_form, 'section': section, 'contents': contents})
+
 
 def get_content_formsets(instance):
 
-        formset = ContentFormSet(instance=instance)
+    formset = ContentFormSet(instance=instance)
 
-        return formset
+    return formset
 
 # def get_content_formset(content_type, instance, data, files):
 #     if content_type=='video':
@@ -243,7 +252,8 @@ def create_section(request, course_id, section_form=None):
     if request.method == 'POST':
 
         if section_form == None:
-            section_form =  CourseSectionForm(data=request.POST, files=request.FILES)
+            section_form = CourseSectionForm(
+                data=request.POST, files=request.FILES)
 
         if section_form.is_valid():
             section = section_form.save(commit=False)
@@ -257,18 +267,21 @@ def create_section(request, course_id, section_form=None):
             messages.error(request, 'error creating the course')
 
     section_form = CourseSectionForm()
-    return render(request, 'courses/create_section.html', {'section_form':section_form, 'course':course})
+    return render(request, 'courses/create_section.html', {'section_form': section_form, 'course': course})
+
 
 @login_required
 def list_courses(request):
-    profile=request.user.profile
-    course_list = InstructorCoursesList.objects.filter(profile=profile).first()
+    profile = request.user.profile
+    # course_list = InstructorCoursesList.objects.filter(profile=profile).first()
 
     try:
-        courses = Course.objects.all().filter(instructor_course_list=course_list)
+        # courses = Course.objects.all().filter(instructor_course_list=course_list)
+        courses = Course.objects.all()
     except Course.MultipleObjectsReturned:
         print("Exception ERROR: multiple objects returned")
-    return render(request, 'courses/courses_list.html', {'courses':courses})
+    return render(request, 'courses/courses_list.html', {'courses': courses})
+
 
 @login_required
 def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete=None):
@@ -290,7 +303,8 @@ def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete
     if request.method == 'POST':
 
         if edit_course_form == None:
-            edit_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+            edit_course_form = CourseInfoForm(
+                instance=course, data=request.POST, files=request.FILES)
 
         if ('save' in request.POST) or test_save:
             if edit_course_form.is_valid():
@@ -299,28 +313,31 @@ def edit_course(request, oid, edit_course_form=None, test_save=None, test_delete
 
         elif ('delete' in request.POST) or test_delete:
             course.delete()
-            next = request.POST.get('next','/')
+            next = request.POST.get('next', '/')
             return HttpResponseRedirect(reverse('courses:list_courses'))
         else:
             messages.error(request, 'error updating the course')
     else:
         edit_course_form = CourseInfoForm(instance=course)
-    return render(request, 'courses/edit_course.html', {'edit_course_form':edit_course_form, 'course':course, 'sections':net_sections})
+    return render(request, 'courses/edit_course.html', {'edit_course_form': edit_course_form, 'course': course, 'sections': net_sections})
+
 
 @login_required
 def create_course(request, new_course_form=None):
-    profile=request.user.profile
+    profile = request.user.profile
     # profile = Profile(user=request.user)
-    course_list = InstructorCoursesList.objects.filter(profile=profile).first()
+    # course_list = InstructorCoursesList.objects.filter(profile=profile).first()
     # Must save it first before assign it
     # course_list.save()
     # section_formset = CourseSectionFormSet(instance=course)
 
     if request.method == 'POST':
-        course = Course.objects.create(instructor_course_list=course_list)
+        # course = Course.objects.create(instructor_course_list=course_list)
+        course = Course.objects.create()
 
-        if new_course_form==None:
-            new_course_form = CourseInfoForm(instance=course, data=request.POST, files=request.FILES)
+        if new_course_form == None:
+            new_course_form = CourseInfoForm(
+                instance=course, data=request.POST, files=request.FILES)
 
         if new_course_form.is_valid():
             new_course_form.save()
@@ -332,4 +349,4 @@ def create_course(request, new_course_form=None):
             messages.error(request, 'error creating the course')
     else:
         new_course_form = CourseInfoForm()
-    return render(request, 'courses/create_course.html', {'new_course_form':new_course_form})
+    return render(request, 'courses/create_course.html', {'new_course_form': new_course_form})

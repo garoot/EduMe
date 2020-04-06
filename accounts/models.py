@@ -41,7 +41,8 @@ class Profile(models.Model):
         - is_instructor & is_promoter will be False by default and once application is approved, admins change it to True
     """
     is_student = models.BooleanField(default=True)
-    is_instructor = models.BooleanField(default=False)
+    # is_instructor = models.BooleanField(default=False)
+    # is_blogger = models.BooleanField(default=False)
     is_promoter = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     """
@@ -63,19 +64,19 @@ class Profile(models.Model):
     1-  instructor_application_status = 'rejected' or
     2- instructor_application_status = 'None'
     """
-    def show_instructor_application(self):
-        if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'None':
-            return True
-        elif self.instructor_application_status == 'submitted':
-            return False
+    # def show_instructor_application(self):
+    #     if self.instructor_application_status == 'rejected' or self.instructor_application_status == 'None':
+    #         return True
+    #     elif self.instructor_application_status == 'submitted':
+    #         return False
 
-@receiver(post_save, sender=Profile)
-def create_course_list(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=Profile)
+# def create_course_list(sender, instance, created, **kwargs):
 
-    if instance.is_instructor:
-        InstructorCoursesList.objects.get_or_create(profile=instance)
-    else:
-        print("is_instructor is False")
+#     if instance.is_instructor:
+#         InstructorCoursesList.objects.get_or_create(profile=instance)
+#     else:
+#         print("is_instructor is False")
 
 @receiver(post_save, sender=Profile)
 def create_student(sender, instance, created, **kwargs):
@@ -89,12 +90,12 @@ def create_student(sender, instance, created, **kwargs):
         """
         the following model must be created for all students as they might apply to become instructors
         """
-        if instance.is_instructor:
-            try:
-                InstructorResume.objects.all().filter(profile = instance).first()
-            except InstructorResume.MultipleObjectsReturned:
-                print("Exception ERROR: multiple objects returned! 5")
-        # else:
+        # if instance.is_instructor:
+        #     try:
+        #         InstructorResume.objects.all().filter(profile = instance).first()
+        #     except InstructorResume.MultipleObjectsReturned:
+        #         print("Exception ERROR: multiple objects returned! 5")
+        # # else:
         #     InstructorResume.objects.create(profile = instance)
 
     else:
@@ -170,72 +171,72 @@ Instructor-related classes
 
 They will all be automatically created if the is_instructor field of the profile is True
 """
-class InstructorResume(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
-    degree = models.CharField(max_length=6, choices=EDUCATION_DEGREES, default='None')
-    major = models.CharField(max_length=344)
-    experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
-    status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')
+# class InstructorResume(models.Model):
+#     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='instructor_qualification')
+#     degree = models.CharField(max_length=6, choices=EDUCATION_DEGREES, default='None')
+#     major = models.CharField(max_length=344)
+#     experience = models.TextField(help_text= 'Briefly, describe your background knowledge related to the topics you want to teach')
+#     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='None')
 
-    def approve(self):
-        self.status = 'accepted'
-        self.profile.instructor_application_status = 'accepted'
-        self.profile.is_instructor = True
-        self.save()
-        self.profile.save()
-        print("Application approved..")
+#     def approve(self):
+#         self.status = 'accepted'
+#         self.profile.instructor_application_status = 'accepted'
+#         self.profile.is_instructor = True
+#         self.save()
+#         self.profile.save()
+#         print("Application approved..")
 
-    def reject(self):
-        self.status = 'rejected'
-        self.profile.instructor_application_status = 'rejected'
-        self.profile.is_instructor = False
-        self.save()
-        self.profile.save()
-        print("Application rejected..")
+#     def reject(self):
+#         self.status = 'rejected'
+#         self.profile.instructor_application_status = 'rejected'
+#         self.profile.is_instructor = False
+#         self.save()
+#         self.profile.save()
+#         print("Application rejected..")
 
-    def submit(self):
-        self.status = 'submitted'
-        self.profile.instructor_application_status = 'submitted'
-        self.save()
-        self.profile.save()
-        print("Application submitted..")
+#     def submit(self):
+#         self.status = 'submitted'
+#         self.profile.instructor_application_status = 'submitted'
+#         self.save()
+#         self.profile.save()
+#         print("Application submitted..")
 
-    def __str__(self):
-        return self.profile.user.username
+#     def __str__(self):
+#         return self.profile.user.username
 
-class InstructorBankingInfo(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    address = models.CharField(max_length=455)
-    """
-    below is just a temporary field and will be chnged once payment system is configured
-    """
-    banking_info = models.CharField(max_length=455)
+# class InstructorBankingInfo(models.Model):
+#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name = 'banking_info')
+#     first_name = models.CharField(max_length=255)
+#     last_name = models.CharField(max_length=255)
+#     address = models.CharField(max_length=455)
+#     """
+#     below is just a temporary field and will be chnged once payment system is configured
+#     """
+#     banking_info = models.CharField(max_length=455)
 
-class InstructorCoursesList(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='course_lists')
+# class InstructorCoursesList(models.Model):
+#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='course_lists')
 """
 This will be automatically created once the InstructorInfo is created
 """
-class InstructorReport(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='report')
-    instructor_revenue = models.FloatField(max_length=200,  null=True)
-    number_of_students = models.IntegerField(default=0)
-    rating = models.FloatField(default=0)
-    rates = models.IntegerField(default=0)
+# class InstructorReport(models.Model):
+#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='report')
+#     instructor_revenue = models.FloatField(max_length=200,  null=True)
+#     number_of_students = models.IntegerField(default=0)
+#     rating = models.FloatField(default=0)
+#     rates = models.IntegerField(default=0)
 
-    def add_rating(self, new_rating):
-        if self.rates == 0:
-            self.rates += 1
-            self.rating = new_rating
-        elif self.rates != 0:
-            self.rates += 1
-        self.rating = (self.rating + new_rating) / 2
-        return self.rating
+#     def add_rating(self, new_rating):
+#         if self.rates == 0:
+#             self.rates += 1
+#             self.rating = new_rating
+#         elif self.rates != 0:
+#             self.rates += 1
+#         self.rating = (self.rating + new_rating) / 2
+#         return self.rating
 
-    def add_student(self):
-        self.number_of_students += 1
+#     def add_student(self):
+#         self.number_of_students += 1
 
-    def update_revenue(self, purchase_amount):
-        pass
+#     def update_revenue(self, purchase_amount):
+#         pass

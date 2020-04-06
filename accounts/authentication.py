@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 User = get_user_model()
 
+
 class EmailAuth(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         print("username:{}".format(username))
