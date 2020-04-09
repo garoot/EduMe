@@ -1,12 +1,11 @@
-
-/components
-	/App.js
-	/Blogs.js
-	/Homepage.js
-	/Navbar.js
-	/Footer.js
-	/Courses.js
-	/User.js
+- frontend/src/components/
+	- App.js
+	- Blogs.js
+	- Homepage.js
+	- Navbar.js
+	- Footer.js
+	- Courses.js
+	- User.js
 
 <header>
 <header/>	
