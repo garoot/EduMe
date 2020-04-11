@@ -1,7 +1,5 @@
 # CoursaTech
 
-### It's Either Win or Learn 
-
 ## api usage:
    ### to test bloglist retreival: 
    - paste server link: http://127.0.0.1:8000/api/blogs
