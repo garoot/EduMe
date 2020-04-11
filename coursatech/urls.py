@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url, include
-from django.urls import path
+from django.urls import path, re_path
 from courses import views
 # from search import views as search_views
 from django.conf.urls.static import static
@@ -28,9 +28,12 @@ urlpatterns = [
     # url(r'^$', views.index, name='index'),
     # path('Registration/', include('Authentication.urls')),
     # # path('studentsPage/', include('Authentication.urls')),
+    # url(r'', include('blogs.urls')),
     url(r'^admin/', admin.site.urls),
+    re_path('api/', include('blogs.urls')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^courses/', include('courses.urls', namespace='courses')),
+
     # url(r'^cart/', include('cart.urls', namespace='cart')),
     # url(r'^search/', search_views.search, name='search_course'),
     # url(r'^search_course/', search_views.search_course, name='search_course'),

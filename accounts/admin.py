@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, WishList, WishListCourse, PurchaseList, PurchasedCourse
+from .models import Profile, WishList, WishListCourse, PurchaseList, PurchasedCourse, BloggerBlogList, BlogListBlog
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'dob', 'photo']
@@ -19,3 +19,5 @@ admin.site.register(WishList)
 admin.site.register(WishListCourse)
 admin.site.register(PurchaseList)
 admin.site.register(PurchasedCourse)
+admin.site.register(BloggerBlogList)
+admin.site.register(BlogListBlog)

@@ -42,7 +42,7 @@ class Profile(models.Model):
     """
     is_student = models.BooleanField(default=True)
     # is_instructor = models.BooleanField(default=False)
-    # is_blogger = models.BooleanField(default=False)
+    is_blogger = models.BooleanField(default=False)
     is_promoter = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     """
@@ -112,21 +112,23 @@ def create_student(sender, instance, created, **kwargs):
 #         print("profile is not instructor")
 
 
-# @receiver(post_save, sender=Profile)
-# def create_promoter(sender, instance, created, **kwargs):
-#     if instance.is_promoter:
-#         PromoterProfile.objects.get_or_create(profile = instance)
-#         """
-#         since all promoters are students by default, we will run the following line of code anyway
-#         """
-#         StudentProfile.objects.get_or_create(profile = instance)
-#
-#     else:
-#         print("profile is not promoter")
+@receiver(post_save, sender=Profile)
+def create_blogger(sender, instance, created, **kwargs):
+    if instance.is_blogger:
+        BloggerBlogList.objects.get_or_create(profile = instance)
+    else:
+        print("profile is not blogger")
 """
 - WishList and WishListCourse are the classes related to the wish list tables
 - Only WishList will be automatically created once a profile is created
 """
+class BloggerBlogList(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='blog_list')
+
+class BlogListBlog(models.Model):
+    blog_list = models.ForeignKey(BloggerBlogList, on_delete=models.CASCADE, related_name='courses')
+    blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
+
 class WishList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='wish_list')
 
