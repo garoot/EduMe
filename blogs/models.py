@@ -13,6 +13,7 @@ CATEGORIES =(
 class Blog(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='blogs', default="")  
     blog_title = models.CharField(max_length=255)
+    blog_description = models.TextField(max_length=255)   
     publish_date = models.DateTimeField(default=timezone.now, editable=False)
     blog_picture = models.ImageField(upload_to='blogs/%Y/%m/%d', null=True)
     blog_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="blogs", null=True)
