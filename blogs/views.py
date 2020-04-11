@@ -21,12 +21,20 @@ class CategoryBlogListView(generics.ListCreateAPIView):
         #filtering objects related to Category.id
         if category:
             return Blog.objects.filter(blog_category=category)
-
-
 # retreive, update, delete blog
 class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BlogDetailSerializer
     queryset = Blog.objects.all()
+
+class BlogSectionListlView(generics.ListCreateAPIView):
+    queryset = BlogSection.objects.all()
+    serializer_class = BlogSectionDetailSerializer
+
+
+class BlogSectionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BlogSection.objects.all()
+    serializer_class = BlogSectionDetailSerializer
+
 
 
 
