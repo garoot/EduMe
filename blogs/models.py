@@ -7,10 +7,19 @@ from courses.models import Category
 CATEGORIES =(
     ('0', 'Science'),
     ('1', 'Math & Algebra'),
-    ('2', 'Development'),
+    ('2', 'Development Tutorials'),
+    ('3', 'Tech-Related'),
     ('none', 'None'),
     )
 # Create your models here.
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, default="", unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Blog(models.Model):
     # author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='blogs')  
     blogger_bloglist = models.ForeignKey(BloggerBlogList, on_delete=models.SET_NULL, related_name="blogs", null=True)
@@ -18,7 +27,7 @@ class Blog(models.Model):
     blog_description = models.TextField(max_length=255, blank=True, null=True)   
     publish_date = models.DateTimeField(default=timezone.now, editable=False)
     blog_picture = models.ImageField(upload_to='blogs/%Y/%m/%d', blank=True, null=True)
-    blog_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="blogs", blank=True, null=True)
+    blog_category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.blog_title

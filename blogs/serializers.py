@@ -1,10 +1,10 @@
 from .models import Blog, BlogSection, BlogComment
 from rest_framework import serializers
 
-class BlogSectionSerializer(serializers.ModelSerializer):
+class BlogSectionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogSection
-        fields = ['section_topic', 'content']
+        fields = '__all__'
 
 class BlogCommentsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +12,7 @@ class BlogCommentsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BlogDetailSerializer(serializers.ModelSerializer):
-    sections = BlogSectionSerializer(many=True)
+    sections = BlogSectionDetailSerializer(many=True)
     comments = BlogCommentsSerializer(many=True, read_only=True)
     class Meta:
         model = Blog
