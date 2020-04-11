@@ -35,6 +35,10 @@ class BlogSectionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BlogSection.objects.all()
     serializer_class = BlogSectionDetailSerializer
 
+class BlogCommentListView(generics.ListCreateAPIView):
+    queryset = BlogComment.objects.all()
+    serializer_class = BlogCommentsSerializer
+
 
 
 
