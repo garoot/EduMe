@@ -5,12 +5,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 
 ReactDOM.render(
   <React.StrictMode>
     <Navbar sticky="top" />
     <App />
+    <Footer/>
   </React.StrictMode>,
   document.getElementById('root')
 );

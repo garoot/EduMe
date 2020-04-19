@@ -133,9 +133,10 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ORIGIN_WHITELIST = [
+# listening to frontend ports
     'http://localhost:3000',
+    
     'http://localhost:8000',
-    'http://localhost:8080',
 ]
 
 # Static files (CSS, JavaScript, Images)
