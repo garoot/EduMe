@@ -70,6 +70,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'coursatech.urls'
 
+# DateField format
+REST_FRAMEWORK = {
+    
+    'DATETIME_FORMAT': "%Y-%m-%d",
+    
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

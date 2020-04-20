@@ -1,17 +1,26 @@
 import React from 'react';
 import './App.css';
-import Blog from './components/Blog';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {GetBlogs, GetBlogDetail} from './components/Blog';
+
 
 
 function App() {
   return (
     <div class="site-wrapper">
-      <Navbar sticky="top" />
+      <Router>
+        <Navbar sticky="top" />
 
-      <Blog />
-      <Footer />
+        <Route path='/blogs'>
+          <GetBlogs />
+        </Route>
+        <Route path='/blog/:blogId' component={GetBlogDetail}/>
+
+        <Footer />
+      </Router>
+      
 
     </div>
   );

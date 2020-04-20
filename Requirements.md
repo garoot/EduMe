@@ -4,6 +4,7 @@ Install:
 - webpack
 - babel
 - react redux
+- react-router-dom
 - axios
 - django
 - djangorestframework

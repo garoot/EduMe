@@ -22,7 +22,7 @@ class Category(models.Model):
 
 class Blog(models.Model):
     # author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='blogs')  
-    blogger_bloglist = models.ForeignKey(BloggerBlogList, on_delete=models.SET_NULL, related_name="blogs", null=True)
+    blogger_bloglist = models.ForeignKey(BloggerBlogList, on_delete=models.SET_NULL, related_name="blogs", blank=False, null=True)
     blog_title = models.CharField(max_length=255)
     blog_description = models.TextField(max_length=255, blank=True, null=True)   
     publish_date = models.DateTimeField(default=timezone.now, editable=False)

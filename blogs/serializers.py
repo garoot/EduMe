@@ -14,16 +14,24 @@ class BlogCommentsSerializer(serializers.ModelSerializer):
 class BlogDetailSerializer(serializers.ModelSerializer):
     sections = BlogSectionDetailSerializer(many=True)
     comments = BlogCommentsSerializer(many=True, read_only=True)
+    # publish_date = serializers.DateField(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = Blog
         fields = '__all__'
 
 class BlogSerializer(serializers.ModelSerializer):
+    sections = BlogSectionDetailSerializer(many=True)
+    comments = BlogCommentsSerializer(many=True, read_only=True)
+    # publish_date = serializers.DateField(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = Blog
         fields = '__all__'
 
 class BlogForList(serializers.ModelSerializer):
+    publish_date = serializers.DateField(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = Blog
         fields = ['blog_title', 'blog_description',
