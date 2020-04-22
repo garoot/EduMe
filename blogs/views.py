@@ -26,14 +26,15 @@ class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BlogDetailSerializer
     queryset = Blog.objects.all()
 
-class BlogSectionListlView(generics.ListCreateAPIView):
-    queryset = BlogSection.objects.all()
-    serializer_class = BlogSectionDetailSerializer
+# USED IT BEFORE TO INCLUDE IT IN ONE ADMIN CONTROL PAGE (Blogs)
+    # class BlogSectionListlView(generics.ListCreateAPIView):
+    #     queryset = BlogSection.objects.all()
+    #     serializer_class = BlogSectionDetailSerializer
 
-
-class BlogSectionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = BlogSection.objects.all()
-    serializer_class = BlogSectionDetailSerializer
+# USED IT BEFORE TO INCLUDE IT IN ONE ADMIN CONTROL PAGE (Blogs)
+    # class BlogSectionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    #     queryset = BlogSection.objects.all()
+    #     serializer_class = BlogSectionDetailSerializer
 
 class BlogCommentListView(generics.ListCreateAPIView):
     queryset = BlogComment.objects.all()

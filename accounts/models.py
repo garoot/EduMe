@@ -28,8 +28,11 @@ APPLICATION_STATUS=(
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
         Profile.objects.get_or_create(user=instance)
+        
 
 class Profile(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name = 'profile')
     country = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=254, blank=True)
@@ -45,6 +48,7 @@ class Profile(models.Model):
     is_blogger = models.BooleanField(default=False)
     is_promoter = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+  
     """
     the variable below keeps track of the status of the most recent application
     """
@@ -56,7 +60,11 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='users/%Y/%m/%d', null=True, blank=True)
 
     def __str__(self):
-        return self.user.username
+        return (self.user.username)
+
+    # used in serizlizer like Blogs where full name of author is retrieved
+    def full_name(self):
+        return (self.first_name +" "+self.last_name)
 
     """
     this function return true if the application should show up to a user or not

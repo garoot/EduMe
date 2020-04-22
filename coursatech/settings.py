@@ -74,7 +74,7 @@ ROOT_URLCONF = 'coursatech.urls'
 # DateField format
 REST_FRAMEWORK = {
     
-    'DATETIME_FORMAT': "%Y-%m-%d",
+    'DATETIME_FORMAT': "%d-%m-%Y",
     
 }
 
