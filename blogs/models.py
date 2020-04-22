@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from accounts.models import Profile, BloggerBlogList
 from courses.models import Category
+from ckeditor.fields import RichTextField
 
 
 CATEGORIES =(
@@ -35,7 +36,7 @@ class Blog(models.Model):
 class BlogSection(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="sections")
     section_topic = models.CharField(max_length=255)
-    content = models.TextField()
+    content = RichTextField(blank=True, null=True)
 
     def __str__(self):
         return self.section_topic

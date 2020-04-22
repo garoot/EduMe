@@ -10,4 +10,4 @@ Install:
 - djangorestframework
 - djangorestframework-jwt
 - django-cors-headers
-
+- django-ckeditor
