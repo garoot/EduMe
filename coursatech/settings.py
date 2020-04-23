@@ -152,3 +152,33 @@ CORS_ORIGIN_WHITELIST = [
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono',
+        'width': '100%',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'name': 'paragraph',
+         'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                   'Language']
+        ,
+        'name': 'links', 'items': ['Link', 'Unlink', 'Anchor'],
+        'name': 'insert',
+         'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'],
+        'name': 'styles', 'items': [
+            'Styles', 'Format', 'Font', 'FontSize'],
+
+        'name': 'yourcustomtools', 'items': [
+            'CodeSnippet',
+        ],
+
+    'toolbar': 'YourCustomToolbarConfig',
+    'tabSpaces': 4,
+    'extraPlugins': ','.join([
+        'uploadimage',
+        'codesnippet',
+    ]),
+}
+}

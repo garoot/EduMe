@@ -11,3 +11,4 @@ Install:
 - djangorestframework-jwt
 - django-cors-headers
 - django-ckeditor
+- react ckeditor
