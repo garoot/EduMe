@@ -12,3 +12,4 @@ Install:
 - django-cors-headers
 - django-ckeditor
 - react ckeditor
+- html-react-parser
