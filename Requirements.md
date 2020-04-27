@@ -12,8 +12,12 @@ Install:
 - django-cors-headers
 - django-ckeditor
 - react ckeditor
+<<<<<<< HEAD
 - django-tinymce
 - html-react-parser
 - babel-plugin-prismjs
 - npm install react-stickynode
 - npm install prismjs
+=======
+- html-react-parser
+>>>>>>> d7fdbd0b936b0d32976e5d40ce16e259c4707142
