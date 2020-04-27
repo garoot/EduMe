@@ -33,6 +33,7 @@ urlpatterns = [
     re_path('api/', include('blogs.urls')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^courses/', include('courses.urls', namespace='courses')),
+    path('tinymce/', include('tinymce.urls')),
 
     # url(r'^cart/', include('cart.urls', namespace='cart')),
     # url(r'^search/', search_views.search, name='search_course'),

@@ -4,6 +4,8 @@ from accounts.models import Profile, BloggerBlogList
 from courses.models import Category
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
+from tinymce.models import HTMLField
+
 
 
 
@@ -33,7 +35,9 @@ class Blog(models.Model):
     publish_date = models.DateTimeField(default=timezone.now, editable=False)
     blog_picture = models.ImageField(upload_to='blogs/%Y/%m/%d', blank=True, null=True)
     blog_category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    content = RichTextField(blank=True, null=True)
+    # content = RichTextField(blank=True, null=True)
+    content = HTMLField()
+
 
     def __str__(self):
         return self.blog_title

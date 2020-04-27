@@ -18,10 +18,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 # MEDIA_ROOT = os.path.join(PROJECT_DIR,'churchsite_static_root','media_root')
-
-STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'static').replace('\\','/'),
-)
+# PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+# STATICFILES_DIRS = (
+#     os.path.join(os.path.dirname(__file__), 'static').replace('\\','/'),
+# )
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -56,6 +57,8 @@ INSTALLED_APPS = [
     'blogs',
     'corsheaders',
     'ckeditor',
+    'tinymce',
+
 ]
 
 MIDDLEWARE = [
@@ -174,11 +177,25 @@ CKEDITOR_CONFIGS = {
             'CodeSnippet',
         ],
 
-    'toolbar': 'YourCustomToolbarConfig',
-    'tabSpaces': 4,
-    'extraPlugins': ','.join([
-        'uploadimage',
-        'codesnippet',
-    ]),
+        'toolbar': 'YourCustomToolbarConfig',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage',
+            'codesnippet',
+        ]),
+    }
 }
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 300,
+    'plugins': "image,imagetools,media,codesample,link,code",
+    'cleanup_on_startup': True,
+    'menubar': False,
+    'toolbar': "styleselect |undo redo | bold italic | alignleft aligncenter alignright | link image media codesample code",
+    'image_caption': True,
+    'image_advtab': True,
+    'custom_undo_redo_levels': 10,
+    'file_browser_callback': "myFileBrowser",
+    'codesample_global_prismjs': True,
 }

@@ -175,7 +175,7 @@
   grid-column-gap: 5px;
   /* margin-left: 145px; */
   height: 570px;
-  border: 1px solid #;
+  border: 1px solid ;
   width: 80%;
   margin: 0 auto;
 
@@ -196,6 +196,7 @@
   /* margin-left: 120px; */
   margin: 0 auto;
 }
+
 
 .header-post-right-wrapper:hover {
   border: 1px solid #215A8D;
