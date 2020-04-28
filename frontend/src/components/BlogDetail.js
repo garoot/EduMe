@@ -93,7 +93,7 @@ class BlogDetail extends Component {
                         </div>
                     </header>
                     <div className="article-image">
-                        <img src={blog.blog_picture} width="750" alt="" />
+                        <img src={blog.blog_picture} width="100%" alt="" />
                     </div>
                     <div className="article-content">
                         <div dangerouslySetInnerHTML={{ __html: temp_content }}></div>
@@ -111,7 +111,7 @@ console.log(foo + bar);
                 </div>
 
                 <div className="article-right">
-                    <Sticky top={180}>
+                    <Sticky top={180} bottomBoundary={0}>
                         <div className="about-article">
                             <img className="" src={require("./static/author.svg")} width="40" height="40" alt="" />
 
