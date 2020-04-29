@@ -469,9 +469,14 @@
   grid-template-columns: repeat(2, 50%);
   margin-right: 330px;
   margin-top: 10px;
+  position: relative;
 }
 
-
+.footer-rights-wrapper{
+  margin-left: 2px;
+  float: right;
+  position: relative;
+}
 .footer-copyright{
   color: #9D9898;
   font-size: 13px;
@@ -480,8 +485,25 @@
   margin-left: 10px;
   white-space: nowrap;
 }
+.footer-logo-wrapper{
+  margin-right: 2px;
+  float: left;
+  position: relative;
+  overflow: hidden;
+}
+@media screen and (max-width: 768px){
+  .footer-logo{
+    display: none;
+    
+  }
+}
+
 .footer-logo{
   margin-top: 5px;
+  margin-right: 5px;
+  align-items: center;
+  text-align-last: right;
+  
 }
 .site-wrapper{
   /* background-color: #093A64; */

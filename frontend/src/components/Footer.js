@@ -43,13 +43,24 @@ export default function Footer() {
                 {/* The Footer Brand */}
                 <div className="footer-bottom-left ">
                     <div className="footer-bottom-left-wrapper">
-                        <a className="footer-logo text-right" href="">
-                            <img src={require("./static/logo32.png")} width="109" height="20" alt="" />
-                        </a>
-                        <span className="footer-copyright"> &copy;
-                    <script>document.write(new Date().getFullYear())</script>
-                    CoursaTech. All Rights Reserved
-                </span>
+                        <div className="footer-logo-wrapper text-right">
+                            <div>
+                                <a className="footer-logo " href="">
+                                    <img src={require("./static/logo32.png")} width="109" height="20" alt="" />
+                                </a>
+                            </div>
+
+                        </div>
+                        <div className="footer-rights-wrapper text-left">
+                            <div>
+                                <span className="footer-copyright text-left"> &copy;
+                                <script>document.write(new Date().getFullYear())</script>
+                                CoursaTech. All Rights Reserved
+                            </span>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
 
