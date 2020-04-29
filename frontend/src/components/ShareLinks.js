@@ -8,7 +8,7 @@ import './prism.css';
 function ShareLinks(){
     return(
         <div className="article-left-wrapper">
-            <Sticky className="share-logos" top={100} bottomBoundary={750}>
+            <Sticky className="share-logos" top={90} bottomBoundary={950}>
                 <ul className="share-links" >
                     <div className="share-link">
                         <Link>

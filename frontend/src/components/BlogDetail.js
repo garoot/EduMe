@@ -7,7 +7,7 @@ import Prism from "prismjs";
 import Sticky from 'react-stickynode';
 import { Link } from 'react-router-dom';
 import ShareLinks  from "./ShareLinks";
-
+import MetaTags from 'react-meta-tags';
 
 // import './prism.js';
 // import CKEditor from '@ckeditor/ckeditor5-react';
@@ -34,6 +34,13 @@ class BlogDetail extends Component {
 
             
             <div className="article-wrap">
+                <head>
+                    <MetaTags>
+                        <title>Hello</title>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes, target-densityDpi=device-dpi" />
+                    </MetaTags>
+                </head>
                 {/* <link rel="stylesheet" href="/path/to/styles/default.css" /> */}
                 {/* <script src="./prism.js"></script> */}
                 <div className="article-left">
@@ -111,7 +118,7 @@ console.log(foo + bar);
                 </div>
 
                 <div className="article-right">
-                    <Sticky top={180} bottomBoundary={0}>
+                    <Sticky top={90} bottomBoundary={0}>
                         <div className="about-article">
                             <img className="" src={require("./static/author.svg")} width="40" height="40" alt="" />
 

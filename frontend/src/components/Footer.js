@@ -11,10 +11,16 @@ export default function Footer() {
 
                     <div className="footer-left">
                         <div className="footer-left-component">
-                            <h6>Subscribe for exclusive offers</h6>
-                            <p>To receive exclusive offer on our products type your email</p>
-                            <input type="email" name="" value="Enter Email"/>
-                            <input className="email-subscribe btn btn-primary" type="submit" value="Subscribe"/>
+                            <div className="footer-left-text">
+                                <h6 className="footer-left-h6">Subscribe for exclusive offers</h6>
+                                <p className="footer-left-p">To receive exclusive offer on our products type your email</p>
+                            </div>
+   
+                            <div className="footer-left-input">
+                                <input type="email" name="" value="Enter Email" />
+                                <input className="email-subscribe btn btn-primary" type="submit" value="Subscribe" />     
+                            </div>
+
                         </div>
                     </div>
 
