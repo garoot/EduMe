@@ -742,3 +742,55 @@ body {
 * {
   box-sizing: inherit;
 }
+
+.comments-wrapper{
+  position: relative;
+  margin-top: 25px;
+  padding-top: 25px;
+  width: 100%;
+  color: white;
+  /* background-color: rgb(83, 81, 81); */
+
+}
+
+
+.comment-wrapper{
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  position: relative;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid rgb(56, 67, 77);
+}
+
+.comment-left{
+  position: relative;
+  display: inline;
+  padding-bottom: 20px;
+  padding-right: 5px;
+}
+
+.comment-right{
+  display: inline;
+  color: white;
+}
+.comment-header{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  padding-bottom: 10px;
+}
+
+.comment-created{
+  padding: 2px;
+  color: #20A9DE;
+}
+
+.comment-splitter{
+  border-bottom: 1px solid rgb(12, 16, 17);
+  width: 50%;
+  height: 10px;
+  margin-left: 25%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+
+}

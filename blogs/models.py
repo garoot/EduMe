@@ -38,10 +38,14 @@ class Blog(models.Model):
     # content = RichTextField(blank=True, null=True)
     content = HTMLField()
 
-
     def __str__(self):
         return self.blog_title
 
+    def get_likes(self):
+        return self.likes.count()
+
+    def get_dislikes(self):
+        return self.dislikes.count()
     # def full_name(self):
     #     return (self.author.full_name())
 
@@ -55,7 +59,23 @@ class Blog(models.Model):
 #         return self.section_topic
 
 class BlogComment(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name="blog_comments")
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="comments")
     text = models.TextField(max_length=355)
+    created = models.DateTimeField(default=timezone.now, editable=False)
 
+class BlogLike(models.Model):
+    user = models.ForeignKey(
+        Profile, on_delete=models.SET_NULL, null=True, related_name="blog_likes")
+    blog = models.ForeignKey(
+        Blog, on_delete=models.CASCADE, related_name="likes")
+
+class BlogDislike(models.Model):
+    user = models.ForeignKey(
+        Profile, on_delete=models.SET_NULL, null=True, related_name="blog_dislikes")
+    blog = models.ForeignKey(
+        Blog, on_delete=models.CASCADE, related_name="dislikes")
+
+class BlogTag(models.Model):
+    user = models.ForeignKey(
+        Profile, on_delete=models.SET_NULL, null=True, related_name="blog_tags")

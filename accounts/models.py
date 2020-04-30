@@ -66,6 +66,7 @@ class Profile(models.Model):
     def full_name(self):
         return (self.first_name +" "+self.last_name)
 
+    
     """
     this function return true if the application should show up to a user or not
     under two conditions:

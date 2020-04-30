@@ -5,9 +5,11 @@ import Prism from "prismjs";
 // import Prism from './prism.js';
 // import parse from 'html-react-parser';
 import Sticky from 'react-stickynode';
-import { Link } from 'react-router-dom';
 import ShareLinks  from "./ShareLinks";
 import MetaTags from 'react-meta-tags';
+import Comments from './Comments';
+import { BLOG_COMMENTS_API_URL } from "../constants";
+import axios from "axios";
 
 // import './prism.js';
 // import CKEditor from '@ckeditor/ckeditor5-react';
@@ -16,12 +18,26 @@ class BlogDetail extends Component {
     state = {
         blog: null,
         content: null,
+        comments: [],
         
     };
     componentDidMount() {
+        // this.setState({comments: this.props.blog.comments})
         Prism.highlightAll();
+        this.resetState();
+
 
     }
+
+    getBlogComments = () => {
+
+        const blogcomment_api_url = `${BLOG_COMMENTS_API_URL}`;
+        axios.get(blogcomment_api_url+`1`).then(res => this.setState({ comments: res.data }))
+    };
+
+    resetState() {
+        this.getBlogComments();
+    };
     // displayContent(){
     //     parse()
     // }
@@ -114,6 +130,15 @@ console.log(foo + bar);
 `}
                         </code>
                     </pre>
+                    {/* card for author background and bio */}
+                    <div className="author-bio"></div>
+
+                    <div className="comments-wrapper">
+                        <h3>Comments</h3>
+                        <Comments 
+                            comments={this.state.comments} 
+                        />
+                    </div>
 
                 </div>
 

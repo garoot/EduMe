@@ -45,9 +45,13 @@ class GetBlogDetail extends Component {
     };
 
     componentDidMount() {
+
         const { match: { params } } = this.props;
+        // saved in constants/index
         const blog_api_url = `${BLOG_DETAIL_API_URL}`;
+        // passed from BlogList to App to here
         const blog_id = `${params.blogId}`;
+        // fetching..
         axios.get(blog_api_url+blog_id).then(res => this.setState({ blog: res.data }));
         }
 

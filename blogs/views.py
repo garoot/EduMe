@@ -9,8 +9,18 @@ from .models import *
 # list and create blogs
 class BlogListView(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
+    serializer_class = BlogDetailSerializer
+class BlogCommentsView(generics.ListCreateAPIView):
+    serializer_class = BlogCommentsSerializer
 
+    def get_queryset(self, blog_id):
+        #storing Category.id in category
+        blog_id = None
+        blog_id = self.kwargs['blog_id']
+        blog = Blog.objects.get(pk=blog_id)
+        #filtering objects related to Category.id
+        if blog:
+            return BlogComment.objects.filter(blog=blog)  
 class CategoryBlogListView(generics.ListCreateAPIView):
     serializer_class = BlogSerializer
 
