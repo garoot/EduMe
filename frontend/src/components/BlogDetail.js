@@ -16,28 +16,38 @@ import axios from "axios";
 
 class BlogDetail extends Component {
     state = {
-        blog: null,
+        blog:{},
+        blog_id: null,
         content: null,
-        comments: [],
+        comments: {},
         
     };
     componentDidMount() {
-        // this.setState({comments: this.props.blog.comments})
+        this.setState({ comments: this.props.comments })
+        this.setState({blog: this.props.blog})
         Prism.highlightAll();
-        this.resetState();
+        // this.resetState();
 
 
     }
 
-    getBlogComments = () => {
+    // getBlogComments = () => {
 
-        const blogcomment_api_url = `${BLOG_COMMENTS_API_URL}`;
-        axios.get(blogcomment_api_url+`1`).then(res => this.setState({ comments: res.data }))
-    };
+    //     const blogcomment_api_url = `${BLOG_COMMENTS_API_URL}`;
+    //     const temp_blog_id = this.state.blog.id
+    //     axios.get(BLOG_COMMENTS_API_URL, {
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         params: {
+    //             blog_id: temp_blog_id,
+    //         }
+    //     }).then(res => this.setState({ comments: res.data }))
+    // };
 
-    resetState() {
-        this.getBlogComments();
-    };
+    // resetState() {
+    //     this.getBlogComments();
+    // };
     // displayContent(){
     //     parse()
     // }
@@ -136,7 +146,7 @@ console.log(foo + bar);
                     <div className="comments-wrapper">
                         <h3>Comments</h3>
                         <Comments 
-                            comments={this.state.comments} 
+                            comments={this.props.comments} 
                         />
                     </div>
 

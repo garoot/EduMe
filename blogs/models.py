@@ -79,3 +79,6 @@ class BlogDislike(models.Model):
 class BlogTag(models.Model):
     user = models.ForeignKey(
         Profile, on_delete=models.SET_NULL, null=True, related_name="blog_tags")
+
+class NewsletterEmail(models.Model):
+    email = models.EmailField()

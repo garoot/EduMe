@@ -3,7 +3,7 @@ import '../App.css';
 
 export default class Comments extends Component {
     state = {
-        comments : []
+        comments : {}
     }
 
     render() {

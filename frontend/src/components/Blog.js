@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { API_URL, BLOG_DETAIL_API_URL } from "../constants";
+import { API_URL, BLOG_DETAIL_API_URL , BLOG_COMMENTS_API_URL} from "../constants";
 import BlogList from './BlogList';
 import BlogDetail from './BlogDetail';
 
@@ -39,8 +39,8 @@ export { GetBlogs };
 
 class GetBlogDetail extends Component {
     state = {
-        blog: {
-        },
+        blog: [],
+        comments:[]
 
     };
 
@@ -49,27 +49,27 @@ class GetBlogDetail extends Component {
         const { match: { params } } = this.props;
         // saved in constants/index
         const blog_api_url = `${BLOG_DETAIL_API_URL}`;
-        // passed from BlogList to App to here
+        const blogcomment_api_url = `${BLOG_COMMENTS_API_URL}`;
+
+         //FIRST VALID SOLUTION
+        //passed from BlogList to App to here
         const blog_id = `${params.blogId}`;
-        // fetching..
-        axios.get(blog_api_url+blog_id).then(res => this.setState({ blog: res.data }));
-        }
+        // fetching a blog and its comments
+        axios.get(blog_api_url+blog_id).then(res => this.setState({ blog: res.data, comments: res.data.comments }));
+        ///////////////////////////////////////////
+         
 
-    // retrieveBlogDetail = () => {
-    //     const { match: { params } } = this.props;
-    //     axios.get(`http://localhost:8000/api/blog/${params.blogId}`).then(res => this.setState({ blog: res.data }));
-    // };
+    }
 
-    // resetState() {
-    //     this.retrieveBlogDetail();
-    // };
 
     render() {
         return (
             <div className="content-wrap">
                 <BlogDetail
+                    //pass the retrieved blog  
+                    //and its commentsto BlogDetail
                     blog={this.state.blog}
-                    resetState={this.resetState}
+                    comments={this.state.comments}
                 />
             </div>
         );

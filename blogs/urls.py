@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
-from .views import BlogListView, BlogDetailView, CategoryBlogListView, BlogCommentListView
+from .views import *
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -12,7 +12,8 @@ urlpatterns = [
     path('blogs/<category>/', CategoryBlogListView.as_view()),
 
     # retrieve, update, destroy blogs
-    path('blog/<int:pk>/', BlogDetailView.as_view()),
-    path('blogcomments/<int:blog_id>/', BlogCommentListView.as_view())
+    path('blog/<int:pk>/', BlogDetailURLView.as_view()),
+    path('blogcomments/', BlogCommentListView.as_view()),
+    path('newsletter/<str:email>/', NewsletterListView.as_view())
 
 ]

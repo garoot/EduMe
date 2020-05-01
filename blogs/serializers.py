@@ -1,4 +1,4 @@
-from .models import Blog, BlogComment, BlogLike, BlogDislike
+from .models import Blog, BlogComment, BlogLike, BlogDislike, NewsletterEmail
 from rest_framework import serializers
 from django.utils.html import strip_tags
 
@@ -79,3 +79,9 @@ class BlogTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogDislike
         fields = '__all__'
+
+class NewsletterEmailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = NewsletterEmail 
+        fields = ['email']

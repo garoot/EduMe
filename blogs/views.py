@@ -21,6 +21,7 @@ class BlogCommentsView(generics.ListCreateAPIView):
         #filtering objects related to Category.id
         if blog:
             return BlogComment.objects.filter(blog=blog)  
+
 class CategoryBlogListView(generics.ListCreateAPIView):
     serializer_class = BlogSerializer
 
@@ -31,24 +32,38 @@ class CategoryBlogListView(generics.ListCreateAPIView):
         #filtering objects related to Category.id
         if category:
             return Blog.objects.filter(blog_category=category)
+
 # retreive, update, delete blog
-class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+# URL because it passes the pk through URL
+class BlogDetailURLView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BlogDetailSerializer
     queryset = Blog.objects.all()
 
-# USED IT BEFORE TO INCLUDE IT IN ONE ADMIN CONTROL PAGE (Blogs)
-    # class BlogSectionListlView(generics.ListCreateAPIView):
-    #     queryset = BlogSection.objects.all()
-    #     serializer_class = BlogSectionDetailSerializer
-
-# USED IT BEFORE TO INCLUDE IT IN ONE ADMIN CONTROL PAGE (Blogs)
-    # class BlogSectionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    #     queryset = BlogSection.objects.all()
-    #     serializer_class = BlogSectionDetailSerializer
 
 class BlogCommentListView(generics.ListCreateAPIView):
-    queryset = BlogComment.objects.all()
+    # queryset = BlogComment.objects.all()
     serializer_class = BlogCommentsSerializer
+
+    def get_queryset(self):
+        #storing Category.id in category
+        # blog_id = self.kwargs['blog_id']
+
+        blog_id = self.request.query_params.get('blog_id')
+        blog = Blog.objects.get(pk=blog_id)
+        queryset = BlogComment.objects.filter(blog__id=blog_id)
+        # if blog_id is not None:
+        #     blog = Blog.objects.get(pk=blog_id)
+        #filtering objects related to Category.id
+        if blog:
+            queryset = queryset.filter(blog__id=blog.id)
+        return queryset
+
+class NewsletterListView(generics.ListCreateAPIView):
+    queryset = NewsletterEmail.objects.all()
+    serializer_class = NewsletterEmailSerializer
+
+    
+
 
 
 
