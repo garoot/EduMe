@@ -25,7 +25,8 @@ class GetBlogs extends Component {
 
     render(){
         return (
-            <div className="content-wrap">
+            <div className="bloglist-wrap">
+                <h3>Blogs</h3>
                 <BlogList
                     blogs={this.state.blogs}
                     resetState={this.resetState}
@@ -64,7 +65,7 @@ class GetBlogDetail extends Component {
 
     render() {
         return (
-            <div className="content-wrap">
+            <div>
                 <BlogDetail
                     //pass the retrieved blog  
                     //and its commentsto BlogDetail

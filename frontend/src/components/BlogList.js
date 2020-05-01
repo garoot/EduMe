@@ -17,14 +17,22 @@ class BlogList extends Component{
                     //onClick trigger retrieveBlogDetail() 
                     <Link to={`/blog/${blog.id}`}>
                         <div className="blog-container">
-                            <div className="blog-image ml-auto">
+                            <div className="blog-image">
                                 <img src={blog.blog_picture} width="400" height="230" alt="" />
                             </div>
 
                             <div className="blog-info text-left">
-                                <h2>{blog.blog_title}</h2>
+                                <div className="blog-info-topic-wrap">
+
+                                </div>
+                                <div className="blog-info-topic">
+                                    <h2>{blog.blog_title}</h2>
+                                </div>
+                                
                                 {/* <p>{blog.description}</p> */}
-                                 <p>{blog.blog_description}</p>
+                                <div className="blog-info-description">
+                                    <p>{blog.blog_description}</p>
+                                </div>
                             </div>
                         </div>
                         <div className="blog-splitter text-center">

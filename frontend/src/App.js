@@ -22,13 +22,14 @@ function App() {
         <Sticky className="navbar-container" top={0} bottomBoundary={260}>
           <Navbar/>
         </Sticky>
-        
 
-
-        <Route path='/blogs'>
-          <GetBlogs />
-        </Route>
-        <Route path='/blog/:blogId' component={GetBlogDetail}/>
+      <div className="content-wrap">
+          <Route path='/blogs'>
+            <GetBlogs />
+          </Route>
+          <Route path='/blog/:blogId' component={GetBlogDetail} />
+      </div>
+ 
 
         <Footer />
       </Router>
