@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from accounts.models import Profile, BloggerBlogList
 from courses.models import Category
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 

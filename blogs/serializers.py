@@ -84,4 +84,4 @@ class NewsletterEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewsletterEmail 
-        fields = ['email']
+        fields = '__all__'

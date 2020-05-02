@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {GetBlogs, GetBlogDetail} from './components/Blog';
 import Sticky from 'react-stickynode';
 import MetaTags from 'react-meta-tags';
+import NewsLetter from './components/NewsLetter';
 
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
           <GetBlogs />
         </Route>
         <Route path='/blog/:blogId' component={GetBlogDetail} />
+      </div>
+      <div>
+        {/* <NewsLetter/> */}
       </div>
  
 

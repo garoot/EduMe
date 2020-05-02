@@ -62,8 +62,25 @@ class NewsletterListView(generics.ListCreateAPIView):
     queryset = NewsletterEmail.objects.all()
     serializer_class = NewsletterEmailSerializer
 
-    
+    # def create(self, request, *args, **kwargs):
 
+    #     response = 'Already Subscribed *_*'
+    #     user_email = self.request.query_params.get('email')
+
+    #     emails = NewsletterEmail.objects.all()
+    #     if user_email not in emails:
+
+    #         new_subscriber = NewsletterEmail.objects.create(email=user_email)
+    #         response = 'Successfully Subscribed!'
+
+    #         return response
+
+    #     return response 
+
+    
+class NewletterEmailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = NewsletterEmailSerializer
+    queryset = NewsletterEmail.objects.all()
 
 
 

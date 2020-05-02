@@ -14,6 +14,6 @@ urlpatterns = [
     # retrieve, update, destroy blogs
     path('blog/<int:pk>/', BlogDetailURLView.as_view()),
     path('blogcomments/', BlogCommentListView.as_view()),
-    path('newsletter/<str:email>/', NewsletterListView.as_view())
+    path('newsletter/', NewsletterListView.as_view()),
 
 ]
