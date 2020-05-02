@@ -16,9 +16,13 @@ function Navbar() {
 
             <div className="collapse navbar-collapse">
                 <ul className="navbar-nav ml-auto">
-                    <NavLink className="nav-link" to="/blogs">
-                        Blogs
-                    </NavLink>
+                    <div className="nav-buttonwrap">
+                        <NavLink className="nav-link button" to="/blogs">
+                            Blogs
+                        </NavLink>
+
+                    </div>
+
 
                     {/* <li className="nav-item">
                         <a className="nav-link" href="#">Notifications<span className="sr-only">(current)</span></a>

@@ -13,10 +13,13 @@ function App() {
     <div class="site-wrapper">
       <head>
         <MetaTags>
-          <title>Hello</title>
+          <title>Homepage</title>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </MetaTags>
+        <link href="http://fonts.googleapis.com/css?family=Cabin:400,500,600,bold" rel="stylesheet" type="text/css" />
+
+        <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet" type="text/css"/>
       </head>
       <Router>
         <Sticky className="navbar-container" top={0} bottomBoundary={260}>
@@ -24,10 +27,10 @@ function App() {
         </Sticky>
 
       <div className="content-wrap">
-          <Route path='/blogs'>
-            <GetBlogs />
-          </Route>
-          <Route path='/blog/:blogId' component={GetBlogDetail} />
+        <Route path='/blogs'>
+          <GetBlogs />
+        </Route>
+        <Route path='/blog/:blogId' component={GetBlogDetail} />
       </div>
  
 
