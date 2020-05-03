@@ -9,9 +9,7 @@ export default class Footer extends Component{
         new_email: null,
 
     }
-    handleChange = event => {
-        this.setState({ new_email: event.target.value });
-    };
+
     render(){
         return (
 
