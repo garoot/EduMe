@@ -3,23 +3,29 @@ import { NEWS_LETTER_EMAIL_LIST } from "../constants";
 import axios from "axios";
 
 export default class NewsLetter extends Component {
-    state = {
-        emails: [],
-        new_email: null,
-        response: null,
-        is_new: false,
-        posted: false,
+    constructor(props){
+        super(props)
+        this.state = {
+            emails: [],
+            new_email: null,
+            response: null,
+            is_new: false,
+            posted: false,
 
+        }
+        this.baseState = this.state
     }
+
 
     componentDidMount(){
         //set the new email
         // this.setState({new_email: this.props.email})
         //retrieve all emails from server
         this.get_email_list();
+
         
 
-        // this.check_email_list()
+        this.check_email_list()
 
 
     }
@@ -33,18 +39,25 @@ export default class NewsLetter extends Component {
     check_email_list(){
     //if new_email in emails, response='Already Subscribed'
     //if this.state.new is true, call add_new_email(this.state.new_email)
-        const new_email = this.state.new_email
+    this.get_email_list()    
+    const new_email = this.state.new_email
 
         const emails = this.state.emails
         let found = false
         // const found = emails.some(obj => toString(obj.email) === new_email)
-        emails.forEach(function(email){
-            if (email.email===new_email){
+        // found = emails.forEach(function(email){
+        //     if (email.email===new_email){
+        //         found = true
+        //     }
+        // })
+
+        for (var i = 0, len = emails.length; i < len; i++) {
+            if (emails[i].email === new_email) {
                 found = true
-            }
-        })
+            }        
+        }
         if (found) {
-            this.setState({ response: 'Already here..',is_new: false })
+            this.setState({ response: 'Already here..', is_new: false })
 
         } else {
             this.setState({ is_new: true })
@@ -81,17 +94,59 @@ export default class NewsLetter extends Component {
     };
 
     handleSubmit = event => {
-        event.preventDefault();
-        const is_new = this.state.is_new
+        // event.preventDefault()
+        let new_email = this.state.new_email
+        const err_message = null
+        //if there's a new email prompted..
         this.check_email_list()
-        if (is_new){
-            //axios post
-            // setState of this.state.response to 'Subscribed Successfully'
-            this.setState({ response: 'Subscribed Successfully', posted: true })
-            // setState of this.state.posted to True
-        } else {
-            this.setState({ response: 'Already Subscribed My Love :)' })
+
+        if (new_email){
+            const is_new = this.state.is_new
+
+            if (is_new) {
+                //axios post
+                try {
+                    axios.post(NEWS_LETTER_EMAIL_LIST, {
+                        email: new_email
+                    }).then(function (response) {
+                        console.log(response);
+                    }).catch(error => 
+                        
+                        this.setState({ response: '', posted: false })
+                    )
+                        // .then(res => this.setState({ response: res.data }))
+                    
+                }
+  
+                catch (error) {
+                    if (error.response){
+                        this.setState({ response: error.response.status, posted: false })
+                        err_message = error.response.status
+                    } else {
+                        console.log(error.response);
+                    }
+                }
+                // axios.post(NEWS_LETTER_EMAIL_LIST, {
+                //         email: new_email
+                // })
+                //     .then(res => this.setState({ response: res.data.error.mes }))
+                //     .catch(function (error) {
+                //         console.log(error.response);
+                //     });
+                // setState of this.state.response to 'Subscribed Successfully'
+                if (!err_message){
+                    this.setState({ response: 'Subscribed Successfully', posted: true })
+
+                } else {
+                    this.setState({ response: 'LMAO is this your email?', posted: false })
+                }
+                // setState of this.state.posted to True
+            } 
+            else {
+                this.setState({ response: 'Already Subscribed My Love :) ' })
+            }
         }
+
     }
 
     respond(){
@@ -104,20 +159,20 @@ export default class NewsLetter extends Component {
         //     )
         // }
 
-        if (response && is_new && posted) {
+        if (is_new && posted) {
             // return response value
             return(<span>{response}</span>)
-        // } else if (response && is_new){
-        //     return(<span>{response}</span>)
-            // return ''
+
+        } else if (response && is_new){
+            return(<span>{response}</span>)
+
         } else if(response && !is_new){
             return (<span>{response}</span>)
+
         }
     }
 
     render() {
-        const emails = this.state.emails
-        const email_list = this.state.filtered_emails
 
         return (
             <div className="footer-left-component">
@@ -127,11 +182,9 @@ export default class NewsLetter extends Component {
                 </div>
 
                 <div className="footer-left-input">
-                    <form onSubmit={this.handleSubmit}>
-                        <span>{this.respond()}</span>
-                        <input type="text" name="email" value={this.state.new_email} placeholder="Email Address" onInput={this.handleChange} />
-                        <input className="email-subscribe btn btn-primary" type="submit" value="Subscribe" />
-                    </form>
+                    <span>{this.respond()} </span>
+                    <input type="text" name="email" value={this.state.new_email} placeholder="Email Address" onChange={this.handleChange} />
+                    <button className="email-subscribe btn btn-primary" type="submit" onClick={this.handleSubmit} onBlur="">Subscribe</button>
 
                     {/* response either 'Already Exists' or 'Subscribed' or '' */}
                 </div>
