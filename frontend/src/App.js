@@ -28,7 +28,7 @@ function App() {
         </Sticky>
 
       <div className="content-wrap">
-        <Route path='/blogs'>
+        <Route exact path='/'>
           <GetBlogs />
         </Route>
         <Route path='/blog/:blogId' component={GetBlogDetail} />

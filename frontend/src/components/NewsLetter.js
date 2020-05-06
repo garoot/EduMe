@@ -39,8 +39,8 @@ export default class NewsLetter extends Component {
     check_email_list(){
     //if new_email in emails, response='Already Subscribed'
     //if this.state.new is true, call add_new_email(this.state.new_email)
-    this.get_email_list()    
-    const new_email = this.state.new_email
+        this.get_email_list()    
+        const new_email = this.state.new_email
 
         const emails = this.state.emails
         let found = false

@@ -17,7 +17,7 @@ function Navbar() {
             <div className="collapse navbar-collapse">
                 <ul className="navbar-nav ml-auto">
                     <div className="nav-buttonwrap">
-                        <NavLink className="nav-link button" to="/blogs">
+                        <NavLink className="nav-link button" to="/">
                             Blogs
                         </NavLink>
 
